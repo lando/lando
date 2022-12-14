@@ -71,7 +71,7 @@ fi
 
 # Set Download urls if they are empty
 if [ -z "$DOCKER_URL" ]; then
-  DOCKER_URL="https://desktop.docker.com/mac/stable/${DOCKER_ARCH}/${DOCKER_BUILD}/Docker.dmg"
+  DOCKER_URL="https://desktop.docker.com/mac/main/${DOCKER_ARCH}/${DOCKER_BUILD}/Docker.dmg"
 fi
 if [ -z "$LANDO_URL" ]; then
   LANDO_URL="https://files.lando.dev/cli/lando-macos-${ARCH}-${LANDO_CLI_VERSION}"
@@ -156,6 +156,7 @@ cd mpkg/docker.pkg && \
 sed -i "" -e "s/%LANDO_CLI_VERSION%/$LANDO_CLI_VERSION/g" mpkg/Resources/en.lproj/Localizable.strings mpkg/Resources/en.lproj/welcome.rtfd/TXT.rtf mpkg/Distribution
 sed -i "" -e "s/%LANDO_VERSION%/$LANDO_VERSION/g" mpkg/Resources/en.lproj/Localizable.strings mpkg/Resources/en.lproj/welcome.rtfd/TXT.rtf mpkg/Distribution
 sed -i "" -e "s/%DOCKER_VERSION%/$DOCKER_VERSION/g" mpkg/Resources/en.lproj/Localizable.strings mpkg/Resources/en.lproj/welcome.rtfd/TXT.rtf mpkg/Distribution
+sed -i "" -e "s/%ARCH%/$ARCH/g" mpkg/Resources/en.lproj/Localizable.strings mpkg/Resources/en.lproj/welcome.rtfd/TXT.rtf mpkg/Distribution
 
 # Build the package
 mkdir -p dmg && mkdir -p dist && cd mpkg && xar -c --compression=none -f ../dmg/LandoInstaller.pkg .
@@ -164,7 +165,7 @@ mkdir -p dmg && mkdir -p dist && cd mpkg && xar -c --compression=none -f ../dmg/
 cd .. && \
 chmod +x uninstall.sh && \
 mv -f uninstall.sh dmg/uninstall.command && \
-mv -f lando.icns dmg/.VolumeIcon.icns && \
+mv -f lando4.icns dmg/.VolumeIcon.icns && \
 cp -rf ../../README.md dmg/README.md && \
 cp -rf ../../PRIVACY.md dmg/PRIVACY.md && \
 cp -rf ../../TERMS.md dmg/TERMS.md && \
