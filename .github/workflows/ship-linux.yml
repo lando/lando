@@ -19,7 +19,7 @@ jobs:
         os:
           - ubuntu-20.04
         node-version:
-          - '14'
+          - '16'
         ruby-version:
           - '2.6'
         flavor:
