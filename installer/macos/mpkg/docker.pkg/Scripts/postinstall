@@ -16,27 +16,14 @@ killall Docker || true
 declare -r console_user=$(stat -f '%Su' /dev/console)
 
 # Set some docker things
-declare -r docker_engine_ip=127.0.0.1
 declare -r docker_bundle_dir=/Applications/Docker.app/Contents
 declare -r docker=${docker_bundle_dir}/Resources/bin/docker
 
 # Make sure some core directories exist
-sudo mkdir -p /Library/PrivilegedHelperTools
 sudo mkdir -p /usr/local/bin
 
-# Ensure correct permissions
-# See: https://github.com/lando/lando/issues/2780
-sudo mkdir -p "/Users/${console_user}/.docker/contexts/meta" || true
-sudo chown -R ${console_user} "/Users/${console_user}/.docker/contexts" || true
-sudo chown -R ${console_user} "/Users/${console_user}/.docker" || true
-
-# Set up our VMNET things
-sudo launchctl unload /Library/LaunchDaemons/com.docker.vmnetd.plist && sleep 10 || true
-sudo install -m 0544 -o root -g wheel ${docker_bundle_dir}/Library/LaunchServices/com.docker.vmnetd /Library/PrivilegedHelperTools
-sudo install -m 0644 -o root -g wheel ${docker_bundle_dir}/Resources/com.docker.vmnetd.plist /Library/LaunchDaemons
-sudo plutil -insert Version -string 61 /Library/LaunchDaemons/com.docker.vmnetd.plist || true
-sudo launchctl load /Library/LaunchDaemons/com.docker.vmnetd.plist
-sudo chown -R ${console_user} "/Users/${console_user}/.docker" || true
+# Run dockers unattended installer
+sudo /Applications/Docker.app/Contents/MacOS/install --user="${console_user}"
 
 # Launch docker
 sudo -u ${console_user} open -a /Applications/Docker.app

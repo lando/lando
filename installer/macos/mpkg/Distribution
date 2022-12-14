@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <installer-gui-script minSpecVersion="1">
     <title>lando_title</title>
+    <allowed-os-versions>
+        <os-version min="11"/>
+    </allowed-os-versions>
     <options customize="allow" allow-external-scripts="yes" rootVolumeOnly="true" hostArchitectures="x86_64"/>
     <welcome file="welcome.rtfd" mime-type="text/rtfd"/>
 
@@ -17,7 +20,7 @@
         <bundle-version/>
     </pkg-ref>
 
-    <choice id="choiceDocker" title="choiceDocker_title" description="choiceDocker_msg" start_selected="true" start_enabled="true" start_visible="true">
+    <choice id="choiceDocker" selected="installDocker()" title="choiceDocker_title" description="choiceDocker_msg" start_selected="true" start_enabled="true" start_visible="true">
         <pkg-ref id="dev.lando.pkg.docker"/>
     </choice>
     <pkg-ref id="dev.lando.pkg.docker" auth="Root" version="%DOCKER_VERSION%" installKBytes="%DOCKER_INSTALL_KBYTES%">#docker.pkg</pkg-ref>
@@ -31,54 +34,105 @@
     <script>
     <![CDATA[
     /* js:pkmk:start */
+    function installDocker()
+    {
+        try {
+            dockerplist = system.files.plistAtPath('/Applications/Docker.app/Contents/Info.plist');
+            if (!dockerplist) {
+                return true;
+            } else {
+                host_docker_desktop_version = dockerplist.CFBundleShortVersionString;
+                target_docker_desktop_version = '%DOCKER_VERSION%';
+                test = (system.compareVersions(host_docker_desktop_version, target_docker_desktop_version));
+                if (test == -1) return true;
+            }
+
+            return false;
+        } catch (e){ system.log(e); return false; }
+    }
+
     function checkPrerequisite()
     {
-       try
-       {
-           test = system.sysctl('hw.machine');
-           system.log("Hardware architecture detected: " + test);
-           result = (test == 'i386' || test == 'x86_64' || test == 'arm64');
-       } catch (e) { system.log(e); result = false; }
+        try
+        {
+            target_arch = system.localizedString('LANDO_TARGET_ARCH');
+            host_arch = system.sysctl('hw.machine');
+            rosetta = system.sysctl('sysctl.proc_translated');
+            if (rosetta === 1) {
+                host_arch = 'arm64';
+                system.log("Host architecture is translated, assuming arm64");
+            }
 
-       if (!result)
-       {
-           my.result.type = 'Fatal';
-           my.result.title = system.localizedString('UNSUPPORTED_HW_MACHINE_TLE');
-           my.result.message = system.localizedString('UNSUPPORTED_HW_MACHINE_MSG');
-           return result;
-       }
+            system.log("Target architecture: " + target_arch);
+            system.log("Host architecture detected: " + host_arch);
 
-       try
-       {
-           test = system.version['ProductVersion'];
-           system.log("OS version detected: " + test);
-           result = (system.compareVersions(test, '10.13') >= 0);
-       } catch (e) { system.log(e); result = false; }
+            supported_arch = (host_arch == 'i386' || host_arch == 'x86_64' || host_arch == 'arm64');
+            matched_arch = (target_arch == host_arch);
+            system.log("Arch supported: " + supported_arch);
+            system.log("Target/host arch match: " + matched_arch);
+            if (!supported_arch)
+            {
+                my.result.type = 'Fatal';
+                my.result.title = system.localizedString('UNSUPPORTED_HW_MACHINE_TLE');
+                my.result.message = system.localizedString('UNSUPPORTED_HW_MACHINE_MSG');
+                return false;
+            }
+            if (!matched_arch)
+            {
+                my.result.type = 'Fatal';
+                my.result.title = system.localizedString('MISMATCHED_HW_MACHINE_TLE');
+                my.result.message = system.localizedString('MISMATCHED_HW_MACHINE_MSG');
+                return false;
+            }
+        } catch (e) { system.log(e); return false; }
 
-       if (!result)
-       {
-           my.result.type = 'Fatal';
-           my.result.title = system.localizedString('UNSUPPORTED_OS_TLE');
-           my.result.message = system.localizedString('UNSUPPORTED_OS_MSG');
-           return result;
-       }
+        try
+        {
+            test = system.version['ProductVersion'];
+            system.log("OS version detected: " + test);
+            result = (system.compareVersions(test, '11') >= 0);
+            if (!result)
+            {
+                my.result.type = 'Fatal';
+                my.result.title = system.localizedString('UNSUPPORTED_OS_TLE');
+                my.result.message = system.localizedString('UNSUPPORTED_OS_MSG');
+                return false;
+            }
+        } catch (e) { system.log(e); return false; }
 
-      try {
-          dockerplist = system.files.plistAtPath('/Applications/Docker.app/Contents/Info.plist');
-          if (dockerplist) {
-            my.result.type = 'Warning';
-            my.result.title = system.localizedString('DOCKER_INSTALLED_TLE');
-            my.result.message = system.localizedString('DOCKER_INSTALLED_MSG');
-            return false;
-          }
-      } catch (e){ system.log(e); return false; }
+        try {
+            dockerplist = system.files.plistAtPath('/Applications/Docker.app/Contents/Info.plist');
+            if (!dockerplist) {
+                system.log("Docker Desktop not detected");
+                my.result.type = 'Warning';
+                my.result.title = system.localizedString('DOCKER_NOT_INSTALLED_TLE');
+                my.result.message = system.localizedString('DOCKER_NOT_INSTALLED_MSG');
+                return false;
+            } else {
+                host_docker_desktop_version = dockerplist.CFBundleShortVersionString;
+                target_docker_desktop_version = '%DOCKER_VERSION%';
+                system.log("Docker Desktop detected, version: " + host_docker_desktop_version);
+                system.log("Lando wants to install Docker Desktop version: " + target_docker_desktop_version);
+                test = (system.compareVersions(host_docker_desktop_version, target_docker_desktop_version));
+                if (test == 1) {
+                    system.log("Host version of Docker Desktop is ahead of what Lando wants");
+                    my.result.type = 'Warning';
+                    my.result.title = system.localizedString('DOCKER_AHEAD_TLE');
+                    my.result.message = system.localizedString('DOCKER_AHEAD_MSG');
+                    return false;
+                }
+                if (test == -1) {
+                    system.log("Host version of Docker Desktop is behind of what Lando wants");
+                    my.result.type = 'Warning';
+                    my.result.title = system.localizedString('DOCKER_BEHIND_TLE');
+                    my.result.message = system.localizedString('DOCKER_BEHIND_MSG');
+                    return false;
+                }
+            }
+        } catch (e){ system.log(e); return false; }
+    }
 
-       system.log("result:" + result);
-       return result;
-     }
-
-
-     /* js:pkmk:end */
-     ]]>
+    /* js:pkmk:end */
+    ]]>
     </script>
 </installer-gui-script>
