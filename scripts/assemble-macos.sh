@@ -8,18 +8,12 @@ set -e
 #
 LANDO="lando"
 
-DOCKER_COMPOSE_VERSION="1.29.2"
-DOCKER_DESKTOP_VERSION="4.15.0"
-DOCKER_DESKTOP_BUILD="93002"
-LANDO_CLI_VERSION="v3.8.0"
-
 # Set defaults
 ARCH=$(uname -m)
 DOCKER_VERSION="$DOCKER_DESKTOP_VERSION"
 DOCKER_BUILD="$DOCKER_DESKTOP_BUILD"
 LANDO_CLI_VERSION="$LANDO_CLI_VERSION"
 LANDO_VERSION=$(node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)")
-
 
 # Allow things to be overridden
 while (( "$#" )); do
