@@ -21,6 +21,9 @@ declare -r docker=${docker_bundle_dir}/Resources/bin/docker
 
 # Make sure some core directories exist
 sudo mkdir -p /usr/local/bin
+sudo mkdir -p "/Users/${console_user}/.docker/contexts/meta" || true
+sudo chown -R ${console_user} "/Users/${console_user}/.docker/contexts" || true
+sudo chown -R ${console_user} "/Users/${console_user}/.docker" || true
 
 # Run dockers unattended installer
 sudo /Applications/Docker.app/Contents/MacOS/install --user="${console_user}"
