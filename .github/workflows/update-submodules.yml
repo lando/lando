@@ -3,8 +3,13 @@ on:
   schedule:
     - cron: '8 14 * * *'
 
+permissions:
+  contents: read
+
 jobs:
   auto-update-submodules:
+    permissions:
+      contents: write  # for Git to git push
     runs-on: ${{ matrix.os }}
     env:
       TERM: xterm

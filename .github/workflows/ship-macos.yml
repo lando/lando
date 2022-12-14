@@ -9,8 +9,13 @@ on:
       - test*
       - v*
 
+permissions:
+  contents: read
+
 jobs:
   ship-macos-installer:
+    permissions:
+      contents: write  # for softprops/action-gh-release to create GitHub release
     runs-on: ${{ matrix.os }}
     env:
       APPLE_CERT_DATA: ${{ secrets.APPLE_CERT_DATA }}
