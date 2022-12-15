@@ -76,7 +76,9 @@ jobs:
 
       # Build and prep the release
       - name: Rewrite the version based on the tag
-        run: node scripts/dev-version.js
+        run: |
+          node scripts/dev-version.js
+          cat package.json
       - name: Import and verify certs
         shell: powershell
         run: scripts/import-win-certs.ps1

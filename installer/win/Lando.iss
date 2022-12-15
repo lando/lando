@@ -118,7 +118,7 @@ var
   ResultCode: Integer;
   User: String;
 begin
-  WizardForm.FilenameLabel.Caption := 'Installing Docker Desktop...'
+  WizardForm.FilenameLabel.Caption := 'Installing Docker Desktop... this may take a few minutes...'
   if ExecAsOriginalUser(ExpandConstant('{app}\installers\docker\docker.exe'), 'install --quiet --no-windows-containers --backend=wsl-2', '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
   begin
     Log('Docker Desktop installation succeeded with code: ' + IntToStr(ResultCode));
