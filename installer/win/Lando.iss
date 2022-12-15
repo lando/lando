@@ -195,7 +195,7 @@ end;
 
 procedure CurStepChanged(CurStep: TSetupStep);
 begin
-    if (CurStep = ssPostInstall) and IsTaskSelected('modifypath')
+    if (CurStep = ssPostInstall) and WizardIsTaskSelected('modifypath')
     then EnvAddPath(ExpandConstant('{app}\bin'));
 end;
 
