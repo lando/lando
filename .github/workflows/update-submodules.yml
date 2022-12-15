@@ -1,7 +1,15 @@
 name: Automatic Submodule Update
+# on:
+#   schedule:
+#     - cron: '8 14 * * *'
 on:
-  schedule:
-    - cron: '8 14 * * *'
+  push:
+    branches:
+      - main
+      - 'preview/**'
+    tags:
+      - test*
+      - v*
 
 jobs:
   auto-update-submodules:
