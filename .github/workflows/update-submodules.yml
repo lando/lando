@@ -1,15 +1,7 @@
 name: Automatic Submodule Update
-# on:
-#   schedule:
-#     - cron: '8 14 * * *'
 on:
-  push:
-    branches:
-      - main
-      - 'preview/**'
-    tags:
-      - test*
-      - v*
+  schedule:
+    - cron: '8 14 * * *'
 
 jobs:
   auto-update-submodules:
@@ -42,7 +34,7 @@ jobs:
         run: |
           git add .
           git commit \
-          -m "FEAR NOT THE SUBMODULE UPDATES THAT ROBOTS MAKE IN THE DARK WATCHES OF THE NIGHT"
+          -m "Autoupdated submodule pointer"
           git push origin main
 
 
