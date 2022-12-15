@@ -7,7 +7,7 @@ LANDO_CLI_VERSION="$LANDO_CLI_VERSION"
 
 # Download urls
 DOCKER_COMPOSE_URL="https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-Linux-x86_64"
-LANDO_URL="https://files.lando.dev/cli/lando-linux-x64-$LANDO_CLI_VERSION"
+LANDO_URL="https://files.lando.dev/cli/lando-linux-x64-v$LANDO_CLI_VERSION"
 
 # Allow things to be overridden
 while (( "$#" )); do

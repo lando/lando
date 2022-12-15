@@ -74,7 +74,7 @@ if [ -z "$DOCKER_URL" ]; then
   DOCKER_URL="https://desktop.docker.com/mac/main/${DOCKER_ARCH}/${DOCKER_BUILD}/Docker.dmg"
 fi
 if [ -z "$LANDO_URL" ]; then
-  LANDO_URL="https://files.lando.dev/cli/lando-macos-${ARCH}-${LANDO_CLI_VERSION}"
+  LANDO_URL="https://files.lando.dev/cli/lando-macos-${ARCH}-v${LANDO_CLI_VERSION}"
 fi
 
 # Some helpful output

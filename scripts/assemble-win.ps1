@@ -13,7 +13,7 @@ $docker_build = $env:DOCKER_DESKTOP_BUILD
 
 # Download urls
 $docker_url="https://desktop.docker.com/win/main/amd64/$docker_build/Docker%20Desktop%20Installer.exe"
-$lando_url="https://files.lando.dev/cli/lando-win-x64-$lando_cli_version.exe"
+$lando_url="https://files.lando.dev/cli/lando-win-x64-v$lando_cli_version.exe"
 
 # Installer things
 $base_dir = "$pwd\build\installer"

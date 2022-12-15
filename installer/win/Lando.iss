@@ -55,7 +55,7 @@ Name: "custom"; Description: "Custom installation"; Flags: iscustom
 Name: modifypath; Description: "Add lando.exe to PATH"
 
 [Components]
-Name: "Lando"; Description: "Lando {#MyAppVersion}" ; Types: full custom; Flags: disablenouninstallwarning fixed
+Name: "Lando CLI"; Description: "Lando {#LandoCLIVersion}" ; Types: full custom; Flags: disablenouninstallwarning fixed
 Name: "Docker"; Description: "Docker Desktop {#DockerVersion}" ; Types: full custom;
 
 [Files]
