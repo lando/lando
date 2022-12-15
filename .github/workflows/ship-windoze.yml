@@ -98,19 +98,19 @@ jobs:
           # Create release directories
           mkdir -p dist releases dev-builds
           # Move from build dir to dist
-          cp -f "build/installer/dist/lando.exe" "dist/lando.exe"
+          cp -f "build/installer/dist/LandoInstaller.exe" "dist/LandoInstaller.exe"
 
           # Snapshot release
-          cp -f "dist/lando.exe" "dev-builds/lando-build-${{ github.sha }}-$ARCH.exe"
+          cp -f "dist/LandoInstaller.exe" "dev-builds/lando-build-${{ github.sha }}-$ARCH.exe"
 
           # Branch releases
-          if [ -z "$SOURCE_TAG" ]; then cp -f "dist/lando.exe" "releases/lando-$ARCH-$SOURCE_BRANCH-latest.exe"; fi
+          if [ -z "$SOURCE_TAG" ]; then cp -f "dist/LandoInstaller.exe" "releases/lando-$ARCH-$SOURCE_BRANCH-latest.exe"; fi
           # Latest dev release
-          if [[ "$SOURCE_BRANCH" == "main" ]]; then cp -f "dist/lando.exe" "releases/lando-$ARCH-latest.exe"; fi
+          if [[ "$SOURCE_BRANCH" == "main" ]]; then cp -f "dist/LandoInstaller.exe" "releases/lando-$ARCH-latest.exe"; fi
           # Tag releases
-          if [ ! -z "$SOURCE_TAG" ]; then cp -f "dist/lando.exe" "releases/lando-$ARCH-$SOURCE_TAG.exe"; fi
+          if [ ! -z "$SOURCE_TAG" ]; then cp -f "dist/LandoInstaller.exe" "releases/lando-$ARCH-$SOURCE_TAG.exe"; fi
           # Latest stable release
-          if [ ! -z "$SOURCE_TAG" ]; then cp -f "dist/lando.exe" "releases/lando-$ARCH-stable.exe"; fi
+          if [ ! -z "$SOURCE_TAG" ]; then cp -f "dist/LandoInstaller.exe" "releases/lando-$ARCH-stable.exe"; fi
 
           # Print what we end up with
           ls -lsa releases

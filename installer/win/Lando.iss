@@ -1,12 +1,14 @@
 #define MyAppName "Lando"
 #define MyAppPublisher "Lando"
-#define MyAppURL "https://docs.devwithlando.io"
-#define MyAppContact "https://docs.devwithlando.io"
+#define MyAppURL "https://docs.lando.dev"
+#define MyAppContact "mike@lando.dev"
 
 #define docker "Docker.exe"
 #define lando "bundle"
 #define landoIco "lando.ico"
 #define engine "engine.ps1"
+
+#include "environment.iss"
 
 [Setup]
 AppCopyright={#MyAppPublisher}
@@ -22,16 +24,15 @@ ArchitecturesAllowed=x64
 ArchitecturesInstallIn64BitMode=x64
 ChangesEnvironment=true
 Compression=lzma
-DefaultDirName={pf}\{#MyAppName}
+DefaultDirName={commonpf}\{#MyAppName}
 DefaultGroupName=Lando
 DisableProgramGroupPage=yes
 DisableWelcomePage=no
-SignTool=signtool
+
 SetupIconFile=lando.ico
 SetupLogging=yes
 SolidCompression=yes
-
-OutputBaseFilename=lando
+OutputBaseFilename=LandoInstaller
 OutputDir=dist
 WizardImageAlphaFormat=premultiplied
 WizardImageFile=lando-side.bmp
@@ -40,7 +41,7 @@ WizardStyle=modern
 UninstallDisplayIcon={app}\unins000.exe
 
 [CustomMessages]
-WelcomeLabel3=%nLando will also install Docker Desktop for you.%n%nDocker Desktop is a requirement!%n%nIf you do not already have Docker Desktop and you %nelect to not install Docker Desktop then Lando will not work!
+WelcomeLabel3=%nLando will also install Docker Desktop for you if needed!%nNote that Docker Desktop is a requirement.
 FinishedMessage=%nLando Setup will now launch Docker Desktop for you!%n%nThis is a requirement to use Lando and may take a few moments to start.%nYou will immediately see a whale icon in your taskbar!
 
 [Languages]
@@ -51,7 +52,7 @@ Name: "full"; Description: "Full installation"
 Name: "custom"; Description: "Custom installation"; Flags: iscustom
 
 [Tasks]
-Name: modifypath; Description: "Add lando binary to PATH"
+Name: modifypath; Description: "Add lando.exe to PATH"
 
 [Components]
 Name: "Lando"; Description: "Lando {#MyAppVersion}" ; Types: full custom; Flags: disablenouninstallwarning fixed
@@ -109,52 +110,97 @@ end;
 
 function InitializeSetup(): Boolean;
 begin
-  if (FileExists(ExpandConstant('{pf}\Docker\Docker\resources\bin\docker.exe'))) then
-  begin
-    MsgBox('The installer has detected that Docker Desktop is already installed!' + #13#10 + #13#10 + 'Make sure you close Docker Desktop before continuing this installation as Lando will install the version it needs.' + #13#10 + #13#10 + 'If you wish to continue with your current version of Docker Desktop without upgrading make sure you customize your installation on the next step and choose to not install Docker Desktop.' + #13#10 + #13#10 + 'Keeping your current version of Docker Desktop is not supported so YMMV.', mbInformation, MB_OK);
-    Result := True;
-  end
-  else
-  begin
-    Result := True;
-  end;
+  Result := True;
 end;
 
 procedure RunInstallDocker();
 var
   ResultCode: Integer;
+  User: String;
 begin
   WizardForm.FilenameLabel.Caption := 'Installing Docker Desktop...'
-  if Exec(ExpandConstant('{app}\installers\docker\docker.exe'), 'install --quiet', '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
+  if ExecAsOriginalUser(ExpandConstant('{app}\installers\docker\docker.exe'), 'install --quiet --no-windows-containers --backend=wsl-2', '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
   begin
-    // MsgBox('git installed OK', mbInformation, MB_OK);
+    Log('Docker Desktop installation succeeded with code: ' + IntToStr(ResultCode));
   end
   else begin
-    MsgBox('Docker Desktop install failure!', mbCriticalError, MB_OK);
-  end
-end;
+    Log('Docker Desktop installation FAILED with code: ' + IntToStr(ResultCode));
+  end;
 
-const
-  ModPathName = 'modifypath';
-  ModPathType = 'user';
-
-function ModPathDir(): TArrayOfString;
-begin
-  setArrayLength(Result, 1);
-  Result[0] := ExpandConstant('{app}\bin');
-end;
-#include "modpath.iss"
-
-procedure CurStepChanged(CurStep: TSetupStep);
-var
-  Success: Boolean;
-begin
-  Success := True;
-  if CurStep = ssPostInstall then
+  User := ExpandConstant('{username}');
+  WizardForm.FilenameLabel.Caption := 'Adding ' + User + ' to docker-users group...'
+  if Exec('net.exe', ExpandConstant('localgroup docker-users {username} /add'), '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
   begin
-    if IsTaskSelected(ModPathName) then
+    Log(User + 'was added to the docker-users group with code: ' + IntToStr(ResultCode));
+  end
+  else begin
+    Log(User + 'was not added to the docker-users group with code: ' + IntToStr(ResultCode));
+  end;
+end;
+
+procedure CurPageChanged(CurPageID: Integer);
+var
+  TargetDockerVersionString: String;
+  TargetDockerVersion: Int64;
+  HostDockerVersionString: String;
+  HostDockerVersion: Int64;
+  VersionComparison: Integer;
+
+begin
+  if CurPageID = wpSelectComponents then
+  begin
+    TargetDockerVersionString := ExpandConstant('{#DockerVersion}');
+    StrToVersion(TargetDockerVersionString, TargetDockerVersion);
+    Log('Lando wants Docker Desktop version: ' + TargetDockerVersionString + ':' + IntToStr(TargetDockerVersion));
+
+    if RegValueExists(HKEY_LOCAL_MACHINE, 'SOFTWARE\Docker Inc.\Docker\1.0', 'HumanVersion') then
     begin
-      ModPath();
+      RegQueryStringValue(HKEY_LOCAL_MACHINE, 'SOFTWARE\Docker Inc.\Docker\1.0', 'HumanVersion', HostDockerVersionString);
+      StrToVersion(HostDockerVersionString, HostDockerVersion);
+      Log('Detected Docker Desktop version: ' + HostDockerVersionString + ':' + IntToStr(HostDockerVersion));
+      VersionComparison := ComparePackedVersion(HostDockerVersion, TargetDockerVersion);
+      Log('Version comparison result: ' + IntToStr(VersionComparison));
+
+      if VersionComparison > 0 then
+      begin
+        Log('Host Docker Desktop version ahead of target. Component disabled.');
+        MsgBox('Newer Docker Desktop detected!' + #13#10 + #13#10 + 'The installer has detected that your version of Docker Desktop is ahead of what Lando expects!.' + #13#10 + #13#10 + 'This is probably ok but is technically unsupported so YMMV.', mbInformation, MB_OK);
+        WizardForm.ComponentsList.Checked[1] := False;
+        WizardForm.ComponentsList.ItemEnabled[1] := False;
+        WizardForm.ComponentsList.ItemCaption[1] := WizardForm.ComponentsList.ItemCaption[1] + ' (Already installed)';
+      end;
+      if VersionComparison = 0 then
+      begin
+        Log('Host and target Docker Desktop versions are the same! Component disabled.');
+        WizardForm.ComponentsList.Checked[1] := False;
+        WizardForm.ComponentsList.ItemEnabled[1] := False;
+        WizardForm.ComponentsList.ItemCaption[1] := WizardForm.ComponentsList.ItemCaption[1] + ' (Already installed)';
+      end;
+      if VersionComparison = -1 then
+      begin
+        Log('Host Docker Desktop version is behind target. Component enabled.');
+        MsgBox('Older Docker Desktop detected!' + #13#10 + #13#10 + 'The installer has detected an older version of Docker Desktop but we can update it for you!' + #13#10 + #13#10 + 'You can also skip its installation to proceed with your current version.', mbInformation, MB_OK);
+        WizardForm.ComponentsList.Checked[1] := True;
+        WizardForm.ComponentsList.ItemEnabled[1] := True;
+      end;
+    end
+    else begin
+      Log('Could not detect Docker Desktop!');
+      MsgBox('Docker Desktop not detected!' + #13#10 + #13#10 + 'The installer has detected that Docker Desktop is not installed but we can install it for you.' + #13#10 + #13#10 + 'You can also skip its installation however it is required for Lando to work.', mbInformation, MB_OK);
+      WizardForm.ComponentsList.Checked[1] := True;
+      WizardForm.ComponentsList.ItemEnabled[1] := True;
     end;
   end;
+end;
+
+procedure CurStepChanged(CurStep: TSetupStep);
+begin
+    if (CurStep = ssPostInstall) and IsTaskSelected('modifypath')
+    then EnvAddPath(ExpandConstant('{app}\bin'));
+end;
+
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+begin
+    if CurUninstallStep = usPostUninstall
+    then EnvRemovePath(ExpandConstant('{app}\bin'));
 end;
