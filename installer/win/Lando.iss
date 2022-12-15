@@ -28,7 +28,7 @@ DefaultDirName={commonpf}\{#MyAppName}
 DefaultGroupName=Lando
 DisableProgramGroupPage=yes
 DisableWelcomePage=no
-
+SignTool=signtool
 SetupIconFile=lando.ico
 SetupLogging=yes
 SolidCompression=yes
