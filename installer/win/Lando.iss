@@ -122,7 +122,7 @@ begin
     end
     else begin
       Log('Windows feature VirtualMachinePlatform is not enabled');
-      MsgBox('Features not enabled!' + #13#10 + #13#10 + 'Lando requires that the VirtualMachinePlatform and Microsoft-Windows-Subsystem-Linux be enabled.' + #13#10 + #13#10 + 'See https://learn.microsoft.com/en-us/windows/wsl/install for more info.', mbCriticalError, MB_OK);
+      MsgBox('Features not enabled!' + #13#10 + #13#10 + 'Lando requires that the VirtualMachinePlatform and Microsoft-Windows-Subsystem-Linux features be enabled.' + #13#10 + #13#10 + 'See https://learn.microsoft.com/en-us/windows/wsl/install for more info.', mbCriticalError, MB_OK);
       Result := False;
       Exit;
     end;
@@ -143,7 +143,7 @@ begin
     end
     else begin
       Log('Windows feature Microsoft-Windows-Subsystem-Linux is not enabled');
-      MsgBox('Features not enabled!' + #13#10 + #13#10 + 'Lando requires that the VirtualMachinePlatform and Microsoft-Windows-Subsystem-Linux be enabled.' + #13#10 + #13#10 + 'See https://learn.microsoft.com/en-us/windows/wsl/install for more info.', mbCriticalError, MB_OK);
+      MsgBox('Features not enabled!' + #13#10 + #13#10 + 'Lando requires that the VirtualMachinePlatform and Microsoft-Windows-Subsystem-Linux features be enabled.' + #13#10 + #13#10 + 'See https://learn.microsoft.com/en-us/windows/wsl/install for more info.', mbCriticalError, MB_OK);
       Result := False;
       Exit;
     end;
