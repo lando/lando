@@ -28,7 +28,8 @@ DefaultDirName={commonpf}\{#MyAppName}
 DefaultGroupName=Lando
 DisableProgramGroupPage=yes
 DisableWelcomePage=no
-SignTool=signtool
+MinVersion=10.0.19042
+
 SetupIconFile=lando.ico
 SetupLogging=yes
 SolidCompression=yes
@@ -109,8 +110,50 @@ begin
 end;
 
 function InitializeSetup(): Boolean;
+var
+  ErrorCode: Integer;
 begin
-  Result := True;
+  if Exec(ExpandConstant('{cmd}'), '/C dism.exe /online /get-features /format:table | findstr "VirtualMachinePlatform" | findstr "Enabled"', '', SW_HIDE, ewWaitUntilTerminated, ErrorCode) then
+  begin
+    if ErrorCode = 0 then
+    begin
+      Log('Windows feature VirtualMachinePlatform is enabled');
+      Result := True;
+    end
+    else begin
+      Log('Windows feature VirtualMachinePlatform is not enabled');
+      MsgBox('Features not enabled!' + #13#10 + #13#10 + 'Lando requires that the VirtualMachinePlatform and Microsoft-Windows-Subsystem-Linux be enabled.' + #13#10 + #13#10 + 'See https://learn.microsoft.com/en-us/windows/wsl/install for more info.', mbCriticalError, MB_OK);
+      Result := False;
+      Exit;
+    end;
+  end
+  else begin
+    Log('Could not determine status of  Windows Feature: VirtualMachinePlatform' + IntToStr(ErrorCode));
+    MsgBox('Could not determine status of  Windows Feature: VirtualMachinePlatform!', mbCriticalError, MB_OK);
+    Result := False;
+    Exit;
+  end;
+
+  if Exec(ExpandConstant('{cmd}'), '/C dism.exe /online /get-features /format:table | findstr "Microsoft-Windows-Subsystem-Linux" | findstr "Enabled"', '', SW_HIDE, ewWaitUntilTerminated, ErrorCode) then
+  begin
+    if ErrorCode = 0 then
+    begin
+      Log('Windows feature Microsoft-Windows-Subsystem-Linux is enabled');
+      Result := True;
+    end
+    else begin
+      Log('Windows feature Microsoft-Windows-Subsystem-Linux is not enabled');
+      MsgBox('Features not enabled!' + #13#10 + #13#10 + 'Lando requires that the VirtualMachinePlatform and Microsoft-Windows-Subsystem-Linux be enabled.' + #13#10 + #13#10 + 'See https://learn.microsoft.com/en-us/windows/wsl/install for more info.', mbCriticalError, MB_OK);
+      Result := False;
+      Exit;
+    end;
+  end
+  else begin
+    Log('Could not determine status of  Windows Feature: Microsoft-Windows-Subsystem-Linux' + IntToStr(ErrorCode));
+    MsgBox('Could not determine status of  Windows Feature: Microsoft-Windows-Subsystem-Linux!', mbCriticalError, MB_OK);
+    Result := False;
+    Exit;
+  end;
 end;
 
 procedure RunInstallDocker();
