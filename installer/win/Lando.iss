@@ -29,7 +29,7 @@ DefaultGroupName=Lando
 DisableProgramGroupPage=yes
 DisableWelcomePage=no
 MinVersion=10.0.19042
-
+SignTool=signtool
 SetupIconFile=lando.ico
 SetupLogging=yes
 SolidCompression=yes
