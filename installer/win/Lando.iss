@@ -229,7 +229,7 @@ begin
     end
     else begin
       Log('Could not detect Docker Desktop!');
-      MsgBox('Docker Desktop not detected!' + #13#10 + #13#10 + 'The installer has detected that Docker Desktop is not installed but we can install it for you.' + #13#10 + #13#10 + 'You can also skip its installation however it is required for Lando to work.', mbInformation, MB_OK);
+      MsgBox('Docker Desktop not detected!' + #13#10 + #13#10 + 'The installer has detected that Docker Desktop is not installed but we can install it for you' + #13#10 + #13#10 + 'Make sure you have all the requirements to install' + #13#10 + 'See:  https://docs.docker.com/desktop/install/windows-install/#wsl-2-backend' + #13#10 + #13#10 + 'You can also skip its installation however it is required for Lando to work.', mbInformation, MB_OK);
       WizardForm.ComponentsList.Checked[1] := True;
       WizardForm.ComponentsList.ItemEnabled[1] := True;
     end;
