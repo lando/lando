@@ -146,12 +146,3 @@ jobs:
           aws s3 sync releases s3://files.lando.dev/installer --acl public-read
           # Below is for backwards compatibility
           aws s3 sync releases s3://files.lando.dev --acl public-read
-      # Upload releases to GitHub Releases
-      - name: Upload releases to GitHub Releases
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          draft: true
-          files: releases/lando-${{ matrix.arch}}-${{ steps.vars.outputs.SOURCE_TAG }}.dmg
