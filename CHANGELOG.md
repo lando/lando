@@ -10,6 +10,15 @@
 * Improved UX around Docker Desktop installation
 * Improved UX around architecture mismatches
 
+#### Windows
+
+* Updated to [Docker Desktop 4.15.0](https://docs.docker.com/desktop/release-notes/#4150)
+* Updated to new Lando 4 branding
+* Improved Docker Desktop installation logic, Lando will now only install Docker Desktop if it doesn't exist or is behind
+* Improved UX around Docker Desktop installation
+* Improved UX around architecture mismatches
+* Switched to use `wsl2` backend by default instead of `hyper-v1`
+
 ### CLI
 
 * Updated to `@lando/cli` version [`3.8.1`](https://github.com/lando/cli/releases/tag/v3.8.1)
