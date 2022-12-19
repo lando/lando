@@ -1,13 +1,8 @@
-name: Ship Windoze Installer
+name: Test Windoze Installer Build
 
 on:
-  push:
-    branches:
-      - main
-      - 'preview/**'
-    tags:
-      - test*
-      - v*
+  pull_request:
+
 jobs:
   ship-windows-installer:
     runs-on: ${{ matrix.os }}
@@ -52,15 +47,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Get Yarn cache directory
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - name: Use Yarn cache
-        uses: actions/cache@v2
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+          cache: yarn
       - name: Install Yarn dependencies
         run: yarn install --prefer-offline --frozen-lockfile
 
@@ -97,32 +84,15 @@ jobs:
           ARCH: ${{ matrix.arch }}
         shell: bash
         run: |
-          # Create release directories
-          mkdir -p dist releases dev-builds
-          # Move from build dir to dist
-          cp -f "build/installer/dist/LandoInstaller.exe" "dist/LandoInstaller.exe"
-
-          # Snapshot release
-          cp -f "dist/LandoInstaller.exe" "dev-builds/lando-build-${{ github.sha }}-$ARCH.exe"
-
-          # Branch releases
-          if [ -z "$SOURCE_TAG" ]; then cp -f "dist/LandoInstaller.exe" "releases/lando-$ARCH-$SOURCE_BRANCH-latest.exe"; fi
-          # Latest dev release
-          if [[ "$SOURCE_BRANCH" == "main" ]]; then cp -f "dist/LandoInstaller.exe" "releases/lando-$ARCH-latest.exe"; fi
-          # Tag releases
-          if [ ! -z "$SOURCE_TAG" ]; then cp -f "dist/LandoInstaller.exe" "releases/lando-$ARCH-$SOURCE_TAG.exe"; fi
-          # Latest stable release
-          if [ ! -z "$SOURCE_TAG" ]; then cp -f "dist/LandoInstaller.exe" "releases/lando-$ARCH-stable.exe"; fi
-
-          # Print what we end up with
+          mkdir -p releases
+          cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-build-test-$ARCH.${{ matrix.flavor }}"
           ls -lsa releases
-          ls -lsa dev-builds
       # Upload back to Actions
       - name: Upload build snapshot as Actions artifact
         uses: actions/upload-artifact@v2
         with:
           name: lando-build-${{ github.sha }}-${{ matrix.arch}}.exe
-          path: dev-builds/
+          path: releases
           if-no-files-found: error
           retention-days: 30
       # Upload releases to S3
@@ -138,14 +108,3 @@ jobs:
           aws s3 sync releases s3://files.lando.dev/installer --acl public-read
           # Below is for backwards compatibility
           aws s3 sync releases s3://files.lando.dev --acl public-read
-      # Upload releases to GitHub Releases
-      - name: Upload releases to GitHub Releases
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          draft: true
-          files: releases/lando-${{ matrix.arch}}-${{ steps.vars.outputs.SOURCE_TAG }}.exe
-          # @TODO: Handle autochangelog stuff here eventaully
-          # body_path: ${{ github.workflow }}-CHANGELOG.txt
