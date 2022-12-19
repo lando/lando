@@ -1,13 +1,9 @@
-name: Ship Linux Installer
+name: Release Linux Installer
 
 on:
-  push:
-    branches:
-      - main
-      - 'preview/**'
-    tags:
-      - test*
-      - v*
+  release:
+    types:
+      - published
 
 jobs:
   ship-linux-installer:
@@ -103,10 +99,6 @@ jobs:
           # Snapshot release
           cp -f "dist/lando.${{ matrix.flavor }}" "dev-builds/lando-build-${{ github.sha }}-$ARCH.${{ matrix.flavor }}"
 
-          # Branch releases
-          if [ -z "$SOURCE_TAG" ]; then cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-$ARCH-$SOURCE_BRANCH-latest.${{ matrix.flavor }}"; fi
-          # Latest dev release
-          if [[ "$SOURCE_BRANCH" == "main" ]]; then cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-$ARCH-latest.${{ matrix.flavor }}"; fi
           # Tag releases
           if [ ! -z "$SOURCE_TAG" ]; then cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-$ARCH-$SOURCE_TAG.${{ matrix.flavor }}"; fi
           # Latest stable release

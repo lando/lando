@@ -1,0 +1,156 @@
+name: Release macOS Installer
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  ship-macos-installer:
+    runs-on: ${{ matrix.os }}
+    env:
+      APPLE_CERT_DATA: ${{ secrets.APPLE_CERT_DATA }}
+      APPLE_CERT_PASSWORD: ${{ secrets.APPLE_CERT_PASSWORD }}
+      APPLE_TEAM_ID: FY8GAUX282
+      TERM: xterm
+    strategy:
+      matrix:
+        os:
+          - macos-12
+        node-version:
+          - '16'
+        arch:
+          - x64
+          - arm64
+
+    steps:
+      # Install deps and cache
+      # Eventually it would be great if these steps could live in a separate YAML file
+      # that could be included in line to avoid code duplication
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set other variables
+        id: vars
+        run: |
+          # Set generic source ref vars
+          echo "::set-output name=SOURCE_NAME::${GITHUB_REF#refs/*/}"
+          echo "::set-output name=SOURCE_BRANCH::${GITHUB_REF#refs/heads/}"
+          echo "::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}"
+          # Unset vars if it makes sense to do so
+          if [ "$GITHUB_REF" == "${GITHUB_REF#refs/tags/}" ]; then echo "::set-output name=SOURCE_TAG::"; fi
+          if [ "$GITHUB_REF" == "${GITHUB_REF#refs/heads/}" ]; then echo "::set-output name=SOURCE_BRANCH::"; fi
+      - name: Test user defined variables
+        run: |
+          echo "The SOURCE_NAME is ${{ steps.vars.outputs.SOURCE_NAME }}"
+          echo "The SOURCE_BRANCH is ${{ steps.vars.outputs.SOURCE_BRANCH }}"
+          echo "The SOURCE_TAG is ${{ steps.vars.outputs.SOURCE_TAG }}"
+      - name: Install node ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Get Yarn cache directory
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Use Yarn cache
+        uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+      - name: Install Yarn dependencies
+        run: yarn install --prefer-offline --frozen-lockfile
+
+      # Import ENVVARS from build.env
+      # @NOTE: We do this so there is a single place to update versions
+      - name: Import build version envvars
+        id: import-env
+        run: |
+          while read line; do
+            echo "$line" >> $GITHUB_ENV
+          done < BUILD.env
+
+      # Build and prep the release
+      - name: Rewrite the version based on the tag
+        run: node scripts/dev-version.js
+      - name: Import and verify certs
+        run: scripts/import-macos-certs.sh
+      - name: Assemble pieces
+        run: scripts/assemble-macos.sh --arch ${{ matrix.arch }}
+      - name: Sign package
+        run: |
+          # Rename some things
+          mv build/installer/dmg/LandoInstaller.pkg build/installer/dmg/UnsignedLandoInstaller.pkg
+          # Sign
+          productsign --sign "$APPLE_TEAM_ID" build/installer/dmg/UnsignedLandoInstaller.pkg build/installer/dmg/LandoInstaller.pkg
+          # Verify
+          pkgutil --check-signature build/installer/dmg/LandoInstaller.pkg
+          # Remove unsigned
+          rm -f build/installer/dmg/UnsignedLandoInstaller.pkg
+      - name: Create DMG
+        run: |
+          mkdir -p dist
+          scripts/create-dmg.sh build/installer/dmg
+      - name: Sign DMG
+        run: |
+          # Sign
+          codesign -s "$APPLE_TEAM_ID" -v dist/lando.dmg
+          # Verify
+          codesign -v dist/lando.dmg
+      - name: Notarize DMG
+        env:
+          APPLE_NOTARY_USER: ${{ secrets.APPLE_NOTARY_USER }}
+          APPLE_NOTARY_PASSWORD: ${{ secrets.APPLE_NOTARY_PASSWORD }}
+        run: scripts/notarize.sh dist/lando.dmg
+
+      # Create and upload releases
+      - name: Create releases
+        env:
+          SOURCE_BRANCH: ${{ steps.vars.outputs.SOURCE_BRANCH }}
+          SOURCE_TAG: ${{ steps.vars.outputs.SOURCE_TAG }}
+          ARCH: ${{ matrix.arch }}
+        run: |
+          # Create release directories
+          mkdir -p ./releases ./dev-builds
+
+          # Snapshot release
+          cp -f "./dist/lando.dmg" "./dev-builds/lando-build-${{ github.sha }}-$ARCH.dmg"
+
+          if [ ! -z "$SOURCE_TAG" ]; then cp -f "./dist/lando.dmg" "./releases/lando-$ARCH-$SOURCE_TAG.dmg"; fi
+          # Latest stable release
+          if [ ! -z "$SOURCE_TAG" ]; then cp -f "./dist/lando.dmg" "./releases/lando-$ARCH-stable.dmg"; fi
+
+          # Print what we end up with
+          ls -lsa ./releases
+          ls -lsa ./dev-builds
+      # Upload back to Actions
+      - name: Upload build snapshot as Actions artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: lando-build-${{ github.sha }}-${{ matrix.arch}}.dmg
+          path: dev-builds/
+          if-no-files-found: error
+          retention-days: 30
+      # Upload releases to S3
+      - name: Configure S3 Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.S3_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.S3_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - name: Upload releases to S3
+        shell: bash
+        run: |
+          aws s3 sync releases s3://files.lando.dev/installer --acl public-read
+          # Below is for backwards compatibility
+          aws s3 sync releases s3://files.lando.dev --acl public-read
+      # Upload releases to GitHub Releases
+      - name: Upload releases to GitHub Releases
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          draft: true
+          files: releases/lando-${{ matrix.arch}}-${{ steps.vars.outputs.SOURCE_TAG }}.dmg

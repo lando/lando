@@ -1,28 +1,28 @@
-name: Ship Windoze Installer
+name: Dev Release macOS Installer
 
 on:
   push:
     branches:
       - main
       - 'preview/**'
-    tags:
-      - test*
-      - v*
 jobs:
-  ship-windows-installer:
+  ship-macos-installer:
     runs-on: ${{ matrix.os }}
     env:
-      WINDOZE_CERT_DATA: ${{ secrets.WINDOZE_CERT_DATA }}
-      WINDOZE_CERT_PASSWORD: ${{ secrets.WINDOZE_CERT_PASSWORD }}
+      APPLE_CERT_DATA: ${{ secrets.APPLE_CERT_DATA }}
+      APPLE_CERT_PASSWORD: ${{ secrets.APPLE_CERT_PASSWORD }}
+      APPLE_TEAM_ID: FY8GAUX282
       TERM: xterm
     strategy:
       matrix:
         os:
-          - windows-2022
+          - macos-12
         node-version:
           - '16'
         arch:
           - x64
+          - arm64
+
     steps:
       # Install deps and cache
       # Eventually it would be great if these steps could live in a separate YAML file
@@ -33,7 +33,6 @@ jobs:
           fetch-depth: 0
       - name: Set other variables
         id: vars
-        shell: bash
         run: |
           # Set generic source ref vars
           echo "::set-output name=SOURCE_NAME::${GITHUB_REF#refs/*/}"
@@ -43,7 +42,6 @@ jobs:
           if [ "$GITHUB_REF" == "${GITHUB_REF#refs/tags/}" ]; then echo "::set-output name=SOURCE_TAG::"; fi
           if [ "$GITHUB_REF" == "${GITHUB_REF#refs/heads/}" ]; then echo "::set-output name=SOURCE_BRANCH::"; fi
       - name: Test user defined variables
-        shell: bash
         run: |
           echo "The SOURCE_NAME is ${{ steps.vars.outputs.SOURCE_NAME }}"
           echo "The SOURCE_BRANCH is ${{ steps.vars.outputs.SOURCE_BRANCH }}"
@@ -68,7 +66,6 @@ jobs:
       # @NOTE: We do this so there is a single place to update versions
       - name: Import build version envvars
         id: import-env
-        shell: bash
         run: |
           while read line; do
             echo "$line" >> $GITHUB_ENV
@@ -76,18 +73,36 @@ jobs:
 
       # Build and prep the release
       - name: Rewrite the version based on the tag
-        run: |
-          node scripts/dev-version.js
-          cat package.json
+        run: node scripts/dev-version.js
       - name: Import and verify certs
-        shell: powershell
-        run: scripts/import-win-certs.ps1
+        run: scripts/import-macos-certs.sh
       - name: Assemble pieces
-        shell: powershell
-        run: scripts/assemble-win.ps1
-      - name: Create and sign package
-        shell: powershell
-        run: scripts/create-exe.ps1
+        run: scripts/assemble-macos.sh --arch ${{ matrix.arch }}
+      - name: Sign package
+        run: |
+          # Rename some things
+          mv build/installer/dmg/LandoInstaller.pkg build/installer/dmg/UnsignedLandoInstaller.pkg
+          # Sign
+          productsign --sign "$APPLE_TEAM_ID" build/installer/dmg/UnsignedLandoInstaller.pkg build/installer/dmg/LandoInstaller.pkg
+          # Verify
+          pkgutil --check-signature build/installer/dmg/LandoInstaller.pkg
+          # Remove unsigned
+          rm -f build/installer/dmg/UnsignedLandoInstaller.pkg
+      - name: Create DMG
+        run: |
+          mkdir -p dist
+          scripts/create-dmg.sh build/installer/dmg
+      - name: Sign DMG
+        run: |
+          # Sign
+          codesign -s "$APPLE_TEAM_ID" -v dist/lando.dmg
+          # Verify
+          codesign -v dist/lando.dmg
+      - name: Notarize DMG
+        env:
+          APPLE_NOTARY_USER: ${{ secrets.APPLE_NOTARY_USER }}
+          APPLE_NOTARY_PASSWORD: ${{ secrets.APPLE_NOTARY_PASSWORD }}
+        run: scripts/notarize.sh dist/lando.dmg
 
       # Create and upload releases
       - name: Create releases
@@ -95,33 +110,26 @@ jobs:
           SOURCE_BRANCH: ${{ steps.vars.outputs.SOURCE_BRANCH }}
           SOURCE_TAG: ${{ steps.vars.outputs.SOURCE_TAG }}
           ARCH: ${{ matrix.arch }}
-        shell: bash
         run: |
           # Create release directories
-          mkdir -p dist releases dev-builds
-          # Move from build dir to dist
-          cp -f "build/installer/dist/LandoInstaller.exe" "dist/LandoInstaller.exe"
+          mkdir -p ./releases ./dev-builds
 
           # Snapshot release
-          cp -f "dist/LandoInstaller.exe" "dev-builds/lando-build-${{ github.sha }}-$ARCH.exe"
+          cp -f "./dist/lando.dmg" "./dev-builds/lando-build-${{ github.sha }}-$ARCH.dmg"
 
           # Branch releases
-          if [ -z "$SOURCE_TAG" ]; then cp -f "dist/LandoInstaller.exe" "releases/lando-$ARCH-$SOURCE_BRANCH-latest.exe"; fi
+          if [ -z "$SOURCE_TAG" ]; then cp -f "./dist/lando.dmg" "./releases/lando-$ARCH-$SOURCE_BRANCH-latest.dmg"; fi
           # Latest dev release
-          if [[ "$SOURCE_BRANCH" == "main" ]]; then cp -f "dist/LandoInstaller.exe" "releases/lando-$ARCH-latest.exe"; fi
-          # Tag releases
-          if [ ! -z "$SOURCE_TAG" ]; then cp -f "dist/LandoInstaller.exe" "releases/lando-$ARCH-$SOURCE_TAG.exe"; fi
-          # Latest stable release
-          if [ ! -z "$SOURCE_TAG" ]; then cp -f "dist/LandoInstaller.exe" "releases/lando-$ARCH-stable.exe"; fi
+          if [[ "$SOURCE_BRANCH" == "main" ]]; then cp -f "./dist/lando.dmg" "./releases/lando-$ARCH-latest.dmg"; fi
 
           # Print what we end up with
-          ls -lsa releases
-          ls -lsa dev-builds
+          ls -lsa ./releases
+          ls -lsa ./dev-builds
       # Upload back to Actions
       - name: Upload build snapshot as Actions artifact
         uses: actions/upload-artifact@v2
         with:
-          name: lando-build-${{ github.sha }}-${{ matrix.arch}}.exe
+          name: lando-build-${{ github.sha }}-${{ matrix.arch}}.dmg
           path: dev-builds/
           if-no-files-found: error
           retention-days: 30
@@ -146,6 +154,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           draft: true
-          files: releases/lando-${{ matrix.arch}}-${{ steps.vars.outputs.SOURCE_TAG }}.exe
-          # @TODO: Handle autochangelog stuff here eventaully
-          # body_path: ${{ github.workflow }}-CHANGELOG.txt
+          files: releases/lando-${{ matrix.arch}}-${{ steps.vars.outputs.SOURCE_TAG }}.dmg
