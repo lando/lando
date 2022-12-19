@@ -1,4 +1,4 @@
-## v3.8.0 - [IN DEV](https://github.com/lando/php/releases/tag/3.8.0)
+## v3.8.0 - [December 19, 2022](https://github.com/lando/php/releases/tag/3.8.0)
 
 ### Installer
 
