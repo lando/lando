@@ -1,4 +1,4 @@
-name: Release Linux Installer
+name: Dev Release Linux Installer
 
 on:
   push:
