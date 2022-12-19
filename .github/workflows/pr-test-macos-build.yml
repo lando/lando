@@ -102,7 +102,7 @@ jobs:
           ARCH: ${{ matrix.arch }}
         run: |
           mkdir -p releases
-          cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-build-test-$ARCH.${{ matrix.flavor }}"
+          cp -f "dist/lando.dmg" "releases/lando-build-test-$ARCH.dmg"
           ls -lsa releases
       # Upload back to Actions
       - name: Upload build snapshot as Actions artifact
