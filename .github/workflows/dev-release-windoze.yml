@@ -1,31 +1,24 @@
-name: Ship Linux Installer
+name: Dev Release Windoze Installer
 
 on:
   push:
     branches:
       - main
       - 'preview/**'
-    tags:
-      - test*
-      - v*
 
 jobs:
-  ship-linux-installer:
+  dev-release-windows-installer:
     runs-on: ${{ matrix.os }}
     env:
+      WINDOZE_CERT_DATA: ${{ secrets.WINDOZE_CERT_DATA }}
+      WINDOZE_CERT_PASSWORD: ${{ secrets.WINDOZE_CERT_PASSWORD }}
       TERM: xterm
     strategy:
       matrix:
         os:
-          - ubuntu-20.04
+          - windows-2022
         node-version:
           - '16'
-        ruby-version:
-          - '2.6'
-        flavor:
-          - deb
-          - pacman
-          - rpm
         arch:
           - x64
     steps:
@@ -38,6 +31,7 @@ jobs:
           fetch-depth: 0
       - name: Set other variables
         id: vars
+        shell: bash
         run: |
           # Set generic source ref vars
           echo "::set-output name=SOURCE_NAME::${GITHUB_REF#refs/*/}"
@@ -47,6 +41,7 @@ jobs:
           if [ "$GITHUB_REF" == "${GITHUB_REF#refs/tags/}" ]; then echo "::set-output name=SOURCE_TAG::"; fi
           if [ "$GITHUB_REF" == "${GITHUB_REF#refs/heads/}" ]; then echo "::set-output name=SOURCE_BRANCH::"; fi
       - name: Test user defined variables
+        shell: bash
         run: |
           echo "The SOURCE_NAME is ${{ steps.vars.outputs.SOURCE_NAME }}"
           echo "The SOURCE_BRANCH is ${{ steps.vars.outputs.SOURCE_BRANCH }}"
@@ -55,10 +50,6 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install ruby ${{ matrix.ruby-version }}
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ${{ matrix.ruby-version }}
       - name: Get Yarn cache directory
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
@@ -75,6 +66,7 @@ jobs:
       # @NOTE: We do this so there is a single place to update versions
       - name: Import build version envvars
         id: import-env
+        shell: bash
         run: |
           while read line; do
             echo "$line" >> $GITHUB_ENV
@@ -82,13 +74,18 @@ jobs:
 
       # Build and prep the release
       - name: Rewrite the version based on the tag
-        run: node scripts/dev-version.js
-      - name: Assemble pieces
-        run: scripts/assemble-linux.sh
-      - name: Create package
         run: |
-          LANDO_VERSION=$(node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)")
-          scripts/create-pkg.sh ${{ matrix.flavor }} "$LANDO_VERSION"
+          node scripts/dev-version.js
+          cat package.json
+      - name: Import and verify certs
+        shell: powershell
+        run: scripts/import-win-certs.ps1
+      - name: Assemble pieces
+        shell: powershell
+        run: scripts/assemble-win.ps1
+      - name: Create and sign package
+        shell: powershell
+        run: scripts/create-exe.ps1
 
       # Create and upload releases
       - name: Create releases
@@ -96,21 +93,20 @@ jobs:
           SOURCE_BRANCH: ${{ steps.vars.outputs.SOURCE_BRANCH }}
           SOURCE_TAG: ${{ steps.vars.outputs.SOURCE_TAG }}
           ARCH: ${{ matrix.arch }}
+        shell: bash
         run: |
           # Create release directories
-          mkdir -p releases dev-builds
+          mkdir -p dist releases dev-builds
+          # Move from build dir to dist
+          cp -f "build/installer/dist/LandoInstaller.exe" "dist/LandoInstaller.exe"
 
           # Snapshot release
-          cp -f "dist/lando.${{ matrix.flavor }}" "dev-builds/lando-build-${{ github.sha }}-$ARCH.${{ matrix.flavor }}"
+          cp -f "dist/LandoInstaller.exe" "dev-builds/lando-build-${{ github.sha }}-$ARCH.exe"
 
           # Branch releases
-          if [ -z "$SOURCE_TAG" ]; then cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-$ARCH-$SOURCE_BRANCH-latest.${{ matrix.flavor }}"; fi
+          if [ -z "$SOURCE_TAG" ]; then cp -f "dist/LandoInstaller.exe" "releases/lando-$ARCH-$SOURCE_BRANCH-latest.exe"; fi
           # Latest dev release
-          if [[ "$SOURCE_BRANCH" == "main" ]]; then cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-$ARCH-latest.${{ matrix.flavor }}"; fi
-          # Tag releases
-          if [ ! -z "$SOURCE_TAG" ]; then cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-$ARCH-$SOURCE_TAG.${{ matrix.flavor }}"; fi
-          # Latest stable release
-          if [ ! -z "$SOURCE_TAG" ]; then cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-$ARCH-stable.${{ matrix.flavor }}"; fi
+          if [[ "$SOURCE_BRANCH" == "main" ]]; then cp -f "dist/LandoInstaller.exe" "releases/lando-$ARCH-latest.exe"; fi
 
           # Print what we end up with
           ls -lsa releases
@@ -119,7 +115,7 @@ jobs:
       - name: Upload build snapshot as Actions artifact
         uses: actions/upload-artifact@v2
         with:
-          name: lando-build-${{ github.sha }}-${{ matrix.arch}}.${{ matrix.flavor }}
+          name: lando-build-${{ github.sha }}-${{ matrix.arch}}.exe
           path: dev-builds/
           if-no-files-found: error
           retention-days: 30
@@ -131,18 +127,8 @@ jobs:
           aws-secret-access-key: ${{ secrets.S3_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
       - name: Upload releases to S3
+        shell: bash
         run: |
           aws s3 sync releases s3://files.lando.dev/installer --acl public-read
           # Below is for backwards compatibility
           aws s3 sync releases s3://files.lando.dev --acl public-read
-      # Upload releases to GitHub Releases
-      - name: Upload releases to GitHub Releases
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          draft: true
-          files: releases/lando-${{ matrix.arch}}-${{ steps.vars.outputs.SOURCE_TAG }}.${{ matrix.flavor }}
-          # @TODO: Handle autochangelog stuff here eventaully
-          # body_path: ${{ github.workflow }}-CHANGELOG.txt

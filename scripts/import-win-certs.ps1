@@ -18,7 +18,6 @@ $cert_data = $env:WINDOZE_CERT_DATA
 $cert_path = "$temp_dir\lando.windoze.p12"
 $cert_password = $env:WINDOZE_CERT_PASSWORD
 $cert_secure_password = $null
-$signtool = "${env:ProgramFiles(x86)}\Windows Kits\10\bin\x64\signtool.exe"
 
 # Export certs
 Write-Output "Cert detected!"
