@@ -85,7 +85,8 @@ jobs:
         shell: bash
         run: |
           mkdir -p releases
-          cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-build-test-$ARCH.${{ matrix.flavor }}"
+          cp -f "build/installer/dist/LandoInstaller.exe" "dist/LandoInstaller.exe"
+          cp -f "dist/LandoInstaller.exe" "releases/lando-build-test-$ARCH.exe"
           ls -lsa releases
       # Upload back to Actions
       - name: Upload build snapshot as Actions artifact
