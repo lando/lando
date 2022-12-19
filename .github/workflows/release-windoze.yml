@@ -103,9 +103,13 @@ jobs:
           cp -f "dist/LandoInstaller.exe" "dev-builds/lando-build-${{ github.sha }}-$ARCH.exe"
 
           # Tag releases
-          if [ ! -z "$SOURCE_TAG" ]; then cp -f "dist/LandoInstaller.exe" "releases/lando-$ARCH-$SOURCE_TAG.exe"; fi
+          cp -f "dist/LandoInstaller.exe" "releases/lando-$ARCH-$SOURCE_TAG.exe"
           # Latest stable release
-          if [ ! -z "$SOURCE_TAG" ]; then cp -f "dist/LandoInstaller.exe" "releases/lando-$ARCH-stable.exe"; fi
+          if [ "${{ github.event.release.prerelease }}" == "false" ]; then
+            cp -f "dist/LandoInstaller.exe" "releases/lando-$ARCH-stable.exe"
+          else
+            cp -f "dist/LandoInstaller.exe" "releases/lando-$ARCH-edge.exe"
+          fi
 
           # Print what we end up with
           ls -lsa releases

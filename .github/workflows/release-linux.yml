@@ -100,9 +100,14 @@ jobs:
           cp -f "dist/lando.${{ matrix.flavor }}" "dev-builds/lando-build-${{ github.sha }}-$ARCH.${{ matrix.flavor }}"
 
           # Tag releases
-          if [ ! -z "$SOURCE_TAG" ]; then cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-$ARCH-$SOURCE_TAG.${{ matrix.flavor }}"; fi
-          # Latest stable release
-          if [ ! -z "$SOURCE_TAG" ]; then cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-$ARCH-stable.${{ matrix.flavor }}"; fi
+          cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-$ARCH-$SOURCE_TAG.${{ matrix.flavor }}"
+
+          # Latest "stable/edge" release
+          if [ "${{ github.event.release.prerelease }}" == "false" ]; then
+            cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-$ARCH-stable.${{ matrix.flavor }}"
+          else
+            cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-$ARCH-edge.${{ matrix.flavor }}"
+          fi
 
           # Print what we end up with
           ls -lsa releases

@@ -117,9 +117,15 @@ jobs:
           # Snapshot release
           cp -f "./dist/lando.dmg" "./dev-builds/lando-build-${{ github.sha }}-$ARCH.dmg"
 
-          if [ ! -z "$SOURCE_TAG" ]; then cp -f "./dist/lando.dmg" "./releases/lando-$ARCH-$SOURCE_TAG.dmg"; fi
-          # Latest stable release
-          if [ ! -z "$SOURCE_TAG" ]; then cp -f "./dist/lando.dmg" "./releases/lando-$ARCH-stable.dmg"; fi
+          # Tag releases
+          cp -f "./dist/lando.dmg" "./releases/lando-$ARCH-$SOURCE_TAG.dmg"
+
+          # Latest stable/edge release
+          if [ "${{ github.event.release.prerelease }}" == "false" ]; then
+            cp -f "./dist/lando.dmg" "./releases/lando-$ARCH-stable.dmg"
+          else
+            cp -f "./dist/lando.dmg" "./releases/lando-$ARCH-edge.dmg"
+          fi
 
           # Print what we end up with
           ls -lsa ./releases
