@@ -4,7 +4,7 @@ on:
   pull_request:
 
 jobs:
-  ship-macos-installer:
+  test-macos-installer:
     runs-on: ${{ matrix.os }}
     env:
       APPLE_CERT_DATA: ${{ secrets.APPLE_CERT_DATA }}

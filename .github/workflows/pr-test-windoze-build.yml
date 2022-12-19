@@ -4,7 +4,7 @@ on:
   pull_request:
 
 jobs:
-  ship-windows-installer:
+  test-windows-installer:
     runs-on: ${{ matrix.os }}
     env:
       WINDOZE_CERT_DATA: ${{ secrets.WINDOZE_CERT_DATA }}

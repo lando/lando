@@ -6,7 +6,7 @@ on:
       - main
       - 'preview/**'
 jobs:
-  ship-macos-installer:
+  dev-release-macos-installer:
     runs-on: ${{ matrix.os }}
     env:
       APPLE_CERT_DATA: ${{ secrets.APPLE_CERT_DATA }}

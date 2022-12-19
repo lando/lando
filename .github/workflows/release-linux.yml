@@ -6,7 +6,7 @@ on:
       - published
 
 jobs:
-  ship-linux-installer:
+  release-linux-installer:
     runs-on: ${{ matrix.os }}
     env:
       TERM: xterm

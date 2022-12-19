@@ -6,7 +6,7 @@ on:
       - published
 
 jobs:
-  ship-windows-installer:
+  release-windows-installer:
     runs-on: ${{ matrix.os }}
     env:
       WINDOZE_CERT_DATA: ${{ secrets.WINDOZE_CERT_DATA }}

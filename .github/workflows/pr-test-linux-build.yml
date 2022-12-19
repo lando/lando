@@ -4,7 +4,7 @@ on:
   pull_request:
 
 jobs:
-  ship-linux-installer:
+  test-linux-installer:
     runs-on: ${{ matrix.os }}
     env:
       TERM: xterm
