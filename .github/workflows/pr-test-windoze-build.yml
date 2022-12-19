@@ -84,7 +84,7 @@ jobs:
           ARCH: ${{ matrix.arch }}
         shell: bash
         run: |
-          mkdir -p releases
+          mkdir -p dist releases
           cp -f "build/installer/dist/LandoInstaller.exe" "dist/LandoInstaller.exe"
           cp -f "dist/LandoInstaller.exe" "releases/lando-build-test-$ARCH.exe"
           ls -lsa releases
