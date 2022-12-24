@@ -56,9 +56,16 @@
         try
         {
             target_arch = system.localizedString('LANDO_TARGET_ARCH');
+            if (target_arch == 'x64)
+            {
+                system.log("Normalized x64 to x86_64");
+                target_arch = 'x86_64;
+            }
+
             host_arch = system.sysctl('hw.machine');
             rosetta = system.sysctl('sysctl.proc_translated');
-            if (rosetta === 1) {
+            if (rosetta === 1)
+            {
                 host_arch = 'arm64';
                 system.log("Host architecture is translated, assuming arm64");
             }

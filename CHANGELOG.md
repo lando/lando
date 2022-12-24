@@ -1,3 +1,11 @@
+## v3.8.1 - [December 24, 2022](https://github.com/lando/php/releases/tag/3.8.1)
+
+### Installer
+
+#### macOS
+
+* Fixed issue with `x64` not translating to `x86_64` correctly, causing architecture mismatch failure [#3487](https://github.com/lando/lando/issues/3487)
+
 ## v3.8.0 - [December 19, 2022](https://github.com/lando/php/releases/tag/3.8.0)
 
 ### Installer
