@@ -56,7 +56,7 @@
         try
         {
             target_arch = system.localizedString('LANDO_TARGET_ARCH');
-            if (target_arch == 'x64)
+            if (target_arch == 'x64')
             {
                 system.log("Normalized x64 to x86_64");
                 target_arch = 'x86_64';
