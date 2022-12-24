@@ -59,7 +59,7 @@
             if (target_arch == 'x64)
             {
                 system.log("Normalized x64 to x86_64");
-                target_arch = 'x86_64;
+                target_arch = 'x86_64';
             }
 
             host_arch = system.sysctl('hw.machine');
