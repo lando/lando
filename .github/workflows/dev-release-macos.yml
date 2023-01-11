@@ -143,6 +143,6 @@ jobs:
       - name: Upload releases to S3
         shell: bash
         run: |
-          aws s3 sync releases s3://files.lando.dev/installer --acl public-read
+          aws s3 sync releases s3://files.lando.dev/installer
           # Below is for backwards compatibility
-          aws s3 sync releases s3://files.lando.dev --acl public-read
+          aws s3 sync releases s3://files.lando.dev
