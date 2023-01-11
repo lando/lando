@@ -17,7 +17,10 @@ jobs:
           - acquia:acquia
           - apache:apache
           - backdrop:backdrop
+          - cli:cli
           - compose:compose
+          - core:core
+          - core-next:core-next
           - documentation:docs
           - dotnet:dotnet
           - drupal:drupal
