@@ -1,3 +1,15 @@
+## v3.9.0 - [January 18, 2023](https://github.com/lando/lando/releases/tag/v3.9.0)
+
+### CLI
+
+* Added a `--debug` flag
+* Improved `bin/lando.js` entrypoint to properly "minstrap" before it hands off to the correct runtime
+
+### Plugins
+
+* Updated to `@lando/core` version [`3.8.4`](https://github.com/lando/core/releases/tag/v3.8.4)
+* Updated to `@lando/php` version [`0.7.1`](https://github.com/lando/php/releases/tag/v0.7.1)
+
 ## v3.8.1 - [December 24, 2022](https://github.com/lando/php/releases/tag/3.8.1)
 
 ### Installer
