@@ -1,5 +1,9 @@
 ## v3.9.0 - [January 18, 2023](https://github.com/lando/lando/releases/tag/v3.9.0)
 
+### Installer
+
+* Updated to [Docker Desktop 4.16.1](https://docs.docker.com/desktop/release-notes/#4161)
+
 ### CLI
 
 * Added a `--debug` flag
