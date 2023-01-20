@@ -104,6 +104,8 @@ jobs:
           if [ -z "$SOURCE_TAG" ]; then cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-$ARCH-$SOURCE_BRANCH-latest.${{ matrix.flavor }}"; fi
           # Latest dev release
           if [[ "$SOURCE_BRANCH" == "main" ]]; then cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-$ARCH-latest.${{ matrix.flavor }}"; fi
+          # Latest dev release 2
+          if [[ "$SOURCE_BRANCH" == "main" ]]; then cp -f "dist/lando.${{ matrix.flavor }}" "releases/lando-$ARCH-dev.${{ matrix.flavor }}"; fi
 
           # Print what we end up with
           ls -lsa releases

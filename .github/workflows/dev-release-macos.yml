@@ -121,6 +121,9 @@ jobs:
           if [ -z "$SOURCE_TAG" ]; then cp -f "./dist/lando.dmg" "./releases/lando-$ARCH-$SOURCE_BRANCH-latest.dmg"; fi
           # Latest dev release
           if [[ "$SOURCE_BRANCH" == "main" ]]; then cp -f "./dist/lando.dmg" "./releases/lando-$ARCH-latest.dmg"; fi
+          # Latest dev release 2
+          if [[ "$SOURCE_BRANCH" == "main" ]]; then cp -f "./dist/lando.dmg" "./releases/lando-$ARCH-dev.dmg"; fi
+
 
           # Print what we end up with
           ls -lsa ./releases
