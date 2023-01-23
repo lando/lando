@@ -1,3 +1,13 @@
+## v3.10.0 - [January 23, 2023](https://github.com/lando/lando/releases/tag/3.10.0)
+
+This release is the same as [3.9.1](https://github.com/lando/lando/releases/tag/v3.9.1) but is bumped so we can flag it as the "latest" release
+
+A lot has happened since our last stable release so we encourage you to read:
+
+* [Extended release notes](https://lando.dev/blog/2023/01/19/v390-extended.html)
+* [2022 Review](https://lando.dev/blog/2023/01/23/review-of-2022.html)
+* [2023 Roadmap](https://lando.dev/blog/2023/01/23/roadmap-of-2023.html)
+
 ## v3.9.1 - [January 20, 2023](https://github.com/lando/lando/releases/tag/v3.9.1)
 
 ### Installer
@@ -11,6 +21,10 @@
 ### Plugins
 
 * Updated to `@lando/core` version [`3.8.5`](https://github.com/lando/core/releases/tag/v3.8.5)
+
+### Misc
+
+* Some [additional notes](https://lando.dev/blog/2023/01/19/v390-extended.html) worth reading 😄
 
 ## v3.9.0 - [January 18, 2023](https://github.com/lando/lando/releases/tag/v3.9.0)
 
