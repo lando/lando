@@ -1,3 +1,28 @@
+## v3.11.0 - [January 27, 2023](https://github.com/lando/lando/releases/tag/3.11.0)
+
+### Installer
+
+#### Windows
+
+* Fixed bug with `features` detection failing for users not using `en-US` [#3490](https://github.com/lando/lando/issues/3490)
+* Switched from `MsgBox` to `SuppressibleMsgBox` [#3504](https://github.com/lando/lando/pull/3504)
+
+### CLI
+
+* Updated to `lando/cli` version [`3.11`](https://github.com/lando/cli/releases/tag/v3.11.0)
+
+### Plugins
+
+* Updated to `@lando/core` version [`3.10.0`](https://github.com/lando/core/releases/tag/v3.10.0)
+* Updated to `@lando/node` version [`0.8.0`](https://github.com/lando/node/releases/tag/v0.8.0)
+
+## Special
+
+* [Extended release notes](https://lando.dev/blog/2023/01/19/v390-extended.html)
+* [2022 Review](https://lando.dev/blog/2023/01/23/review-of-2022.html)
+* [2023 Roadmap](https://lando.dev/blog/2023/01/23/roadmap-of-2023.html)
+* [Down, down](https://www.youtube.com/watch?v=lYBIRHi5-o8)
+
 ## v3.10.0 - [January 23, 2023](https://github.com/lando/lando/releases/tag/3.10.0)
 
 This release is the same as [3.9.1](https://github.com/lando/lando/releases/tag/v3.9.1) but is bumped so we can flag it as the "latest" release
