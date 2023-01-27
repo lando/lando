@@ -113,7 +113,7 @@ function InitializeSetup(): Boolean;
 var
   ErrorCode: Integer;
 begin
-  if Exec(ExpandConstant('{cmd}'), '/C dism.exe /online /get-features /format:table | findstr "VirtualMachinePlatform" | findstr "Enabled"', '', SW_HIDE, ewWaitUntilTerminated, ErrorCode) then
+  if Exec(ExpandConstant('{cmd}'), '/C dism.exe /online /get-features /format:table /english | findstr "VirtualMachinePlatform" | findstr "Enabled"', '', SW_HIDE, ewWaitUntilTerminated, ErrorCode) then
   begin
     if ErrorCode = 0 then
     begin
@@ -134,7 +134,7 @@ begin
     Exit;
   end;
 
-  if Exec(ExpandConstant('{cmd}'), '/C dism.exe /online /get-features /format:table | findstr "Microsoft-Windows-Subsystem-Linux" | findstr "Enabled"', '', SW_HIDE, ewWaitUntilTerminated, ErrorCode) then
+  if Exec(ExpandConstant('{cmd}'), '/C dism.exe /online /get-features /format:table /english | findstr "Microsoft-Windows-Subsystem-Linux" | findstr "Enabled"', '', SW_HIDE, ewWaitUntilTerminated, ErrorCode) then
   begin
     if ErrorCode = 0 then
     begin
