@@ -1,3 +1,40 @@
+## v3.14.0 - [March 1, 2023](https://github.com/lando/lando/releases/tag/3.14.0)
+
+### CLI
+
+* Updated to `lando/cli` version [`3.14`](https://github.com/lando/cli/releases/tag/v3.14.0)
+
+### Plugins
+
+* Updated to `@lando/backdrop` version [`0.8.0`](https://github.com/lando/backdrop/releases/tag/v0.8.0)
+* Updated to `@lando/core` version [`3.14.0`](https://github.com/lando/core/releases/tag/v3.14.0)
+* Updated to `@lando/drupal` version [`0.8.0`](https://github.com/lando/drupal/releases/tag/v0.8.0)
+* Updated to `@lando/joomla` version [`0.8.0`](https://github.com/lando/node/releases/tag/v0.8.0)
+* Updated to `@lando/laravel` version [`0.8.0`](https://github.com/lando/laravel/releases/tag/v0.8.0)
+* Updated to `@lando/node` version [`0.8.1`](https://github.com/lando/node/releases/tag/v0.8.1)
+* Updated to `@lando/pantheon` version [`0.9.0`](https://github.com/lando/pantheon/releases/tag/v0.9.0)
+* Updated to `@lando/symfony` version [`0.8.0`](https://github.com/lando/symfony/releases/tag/v0.8.0)
+* Updated to `@lando/wordpress` version [`0.8.0`](https://github.com/lando/wordpress/releases/tag/v0.8.0)
+
+## Notes
+
+This pre-release is a bit more experimental than most pre-releases. It implements a new URL `scanner` that
+
+* Provides real time updates on the status of services URLS
+* Has a new `path` option so you can configure a different path besides `/` to scan
+* Has a new `timeout` option so you can configure the time to wait for a response from your service
+* Has a new `retry` option so you can configure the amount of retries the scanning does per service
+* Has a new `okCodes` option so you can configure additional code eg `404` that should pass the scanner
+
+See more here: https://docs.lando.dev/core/v3/scanner.html
+Report scanner errors here: https://github.com/lando/lando/issues
+
+### Special
+
+* [2022 Review](https://lando.dev/blog/2023/01/23/review-of-2022.html)
+* [2023 Roadmap](https://lando.dev/blog/2023/01/23/roadmap-of-2023.html)
+* [Pi release](https://www.youtube.com/watch?v=OjyZKfdwlng)
+
 ## v3.11.0 - [January 27, 2023](https://github.com/lando/lando/releases/tag/3.11.0)
 
 ### Installer
