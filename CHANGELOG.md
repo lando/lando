@@ -1,3 +1,24 @@
+## v3.15.0 - [April 7, 2023](https://github.com/lando/lando/releases/tag/3.15.0)
+
+### CLI
+
+* Switched to a hybrid runtime selector to better prep for `v4`
+
+### Plugins
+
+* Updated to `@lando/core` version [`3.15.0`](https://github.com/lando/core/releases/tag/v3.15.0)
+* Updated to `@lando/pantheon` version [`0.10.0`](https://github.com/lando/pantheon/releases/tag/v0.10.0)
+* Updated to `@lando/redis` version [`0.8.0`](https://github.com/lando/redis/releases/tag/v0.8.0)
+
+## Notes
+
+This pre-release is a bit more experimental than most pre-releases. It implements a new URL `scanner` that has the same caveats as [3.14.0](https://github.com/lando/lando/releases/tag/v3.14.0)
+
+### Special
+
+* [2022 Review](https://lando.dev/blog/2023/01/23/review-of-2022.html)
+* [2023 Roadmap](https://lando.dev/blog/2023/01/23/roadmap-of-2023.html)
+
 ## v3.14.0 - [March 1, 2023](https://github.com/lando/lando/releases/tag/3.14.0)
 
 ### CLI
