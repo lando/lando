@@ -1,3 +1,24 @@
+
+## v3.16.0 - [April 21, 2023](https://github.com/lando/lando/releases/tag/3.16.0)
+
+### CLI
+
+* Improved runtime selector dependency sharing and improvement
+
+### Plugins
+
+* Updated to `@lando/php` version [`0.8.0`](https://github.com/lando/php/releases/tag/v0.8.0)
+* Updated to `@lando/platformsh` version [`0.8.0`](https://github.com/lando/platformsh/releases/tag/v0.8.0)
+
+## Notes
+
+This pre-release is a bit more experimental than most pre-releases. It implements a new URL `scanner` that has the same caveats as [3.14.0](https://github.com/lando/lando/releases/tag/v3.14.0)
+
+### Special
+
+* [2022 Review](https://lando.dev/blog/2023/01/23/review-of-2022.html)
+* [2023 Roadmap](https://lando.dev/blog/2023/01/23/roadmap-of-2023.html)
+
 ## v3.15.0 - [April 7, 2023](https://github.com/lando/lando/releases/tag/3.15.0)
 
 ### CLI
