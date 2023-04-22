@@ -3,7 +3,7 @@
 
 ### CLI
 
-* Improved runtime selector dependency sharing and improvement
+* Improved runtime selector dependency sharing and performance
 
 ### Plugins
 
