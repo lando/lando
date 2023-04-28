@@ -30,6 +30,7 @@ jobs:
           fetch-depth: 0
       - name: Set other variables
         id: vars
+        shell: bash
         run: |
           # Set generic source ref vars
           echo "source-name=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
@@ -44,6 +45,7 @@ jobs:
             echo "source-branch=" >> $GITHUB_OUTPUT
           fi
       - name: Test user defined variables
+        shell: bash
         run: |
           echo "The SOURCE_NAME is ${{ steps.vars.outputs.source-name }}"
           echo "The SOURCE_BRANCH is ${{ steps.vars.outputs.source-branch }}"
