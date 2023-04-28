@@ -26,39 +26,34 @@ jobs:
       # Eventually it would be great if these steps could live in a separate YAML file
       # that could be included in line to avoid code duplication
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Set other variables
         id: vars
-        shell: bash
         run: |
           # Set generic source ref vars
-          echo "::set-output name=SOURCE_NAME::${GITHUB_REF#refs/*/}"
-          echo "::set-output name=SOURCE_BRANCH::${GITHUB_REF#refs/heads/}"
-          echo "::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}"
+          echo "source-name=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
+          echo "source-branch=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
+          echo "source-tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
           # Unset vars if it makes sense to do so
-          if [ "$GITHUB_REF" == "${GITHUB_REF#refs/tags/}" ]; then echo "::set-output name=SOURCE_TAG::"; fi
-          if [ "$GITHUB_REF" == "${GITHUB_REF#refs/heads/}" ]; then echo "::set-output name=SOURCE_BRANCH::"; fi
+          if [ "$GITHUB_REF" == "${GITHUB_REF#refs/tags/}" ]; then
+            echo "source-tag=" >> $GITHUB_OUTPUT
+          fi
+          if [ "$GITHUB_REF" == "${GITHUB_REF#refs/heads/}" ]; then
+            echo "source-branch=" >> $GITHUB_OUTPUT
+          fi
       - name: Test user defined variables
-        shell: bash
         run: |
-          echo "The SOURCE_NAME is ${{ steps.vars.outputs.SOURCE_NAME }}"
-          echo "The SOURCE_BRANCH is ${{ steps.vars.outputs.SOURCE_BRANCH }}"
-          echo "The SOURCE_TAG is ${{ steps.vars.outputs.SOURCE_TAG }}"
+          echo "The SOURCE_NAME is ${{ steps.vars.outputs.source-name }}"
+          echo "The SOURCE_BRANCH is ${{ steps.vars.outputs.source-branch }}"
+          echo "The SOURCE_TAG is ${{ steps.vars.outputs.source-tag }}"
       - name: Install node ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Get Yarn cache directory
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - name: Use Yarn cache
-        uses: actions/cache@v2
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+          cache: yarn
       - name: Install Yarn dependencies
         run: yarn install --prefer-offline --frozen-lockfile
 
@@ -90,8 +85,8 @@ jobs:
       # Create and upload releases
       - name: Create releases
         env:
-          SOURCE_BRANCH: ${{ steps.vars.outputs.SOURCE_BRANCH }}
-          SOURCE_TAG: ${{ steps.vars.outputs.SOURCE_TAG }}
+          SOURCE_BRANCH: ${{ steps.vars.outputs.source-branch }}
+          SOURCE_TAG: ${{ steps.vars.outputs.source-tag }}
           ARCH: ${{ matrix.arch }}
         shell: bash
         run: |
@@ -115,7 +110,7 @@ jobs:
           ls -lsa dev-builds
       # Upload back to Actions
       - name: Upload build snapshot as Actions artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: lando-build-${{ github.sha }}-${{ matrix.arch}}.exe
           path: dev-builds/
