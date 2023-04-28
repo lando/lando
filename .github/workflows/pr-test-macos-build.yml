@@ -29,26 +29,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Set other variables
-        id: vars
-        run: |
-          # Set generic source ref vars
-          echo "source-name=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
-          echo "source-branch=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
-          echo "source-tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-
-          # Unset vars if it makes sense to do so
-          if [ "$GITHUB_REF" == "${GITHUB_REF#refs/tags/}" ]; then
-            echo "source-tag=" >> $GITHUB_OUTPUT
-          fi
-          if [ "$GITHUB_REF" == "${GITHUB_REF#refs/heads/}" ]; then
-            echo "source-branch=" >> $GITHUB_OUTPUT
-          fi
-      - name: Test user defined variables
-        run: |
-          echo "The SOURCE_NAME is ${{ steps.vars.outputs.SOURCE_NAME }}"
-          echo "The SOURCE_BRANCH is ${{ steps.vars.outputs.SOURCE_BRANCH }}"
-          echo "The SOURCE_TAG is ${{ steps.vars.outputs.SOURCE_TAG }}"
       - name: Install node ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -101,13 +81,9 @@ jobs:
 
       # Create and upload releases
       - name: Create releases
-        env:
-          SOURCE_BRANCH: ${{ steps.vars.outputs.source-branch }}
-          SOURCE_TAG: ${{ steps.vars.outputs.source-tag }}
-          ARCH: ${{ matrix.arch }}
         run: |
           mkdir -p releases
-          cp -f "dist/lando.dmg" "releases/lando-build-test-$ARCH.dmg"
+          cp -f "dist/lando.dmg" "releases/lando-build-test-${{ matrix.arch }}.dmg"
           ls -lsa releases
       # Upload back to Actions
       - name: Upload build snapshot as Actions artifact
