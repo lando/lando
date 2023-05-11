@@ -140,6 +140,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           draft: true
-          files: releases/lando-${{ matrix.arch}}-${{ steps.vars.outputs.SOURCE_TAG }}.exe
+          files: releases/lando-${{ matrix.arch}}-${{ steps.vars.outputs.source-tag }}.exe
           # @TODO: Handle autochangelog stuff here eventaully
           # body_path: ${{ github.workflow }}-CHANGELOG.txt
