@@ -1,3 +1,13 @@
+## v3.18.0 - [May 26, 2023](https://github.com/lando/lando/releases/tag/3.18.0)
+
+### Plugins
+
+* Updated to `@lando/acquia` version [`0.8.0`](https://github.com/lando/acquia/releases/tag/v0.8.0)
+* Updated to `@lando/drupal` version [`0.10.0`](https://github.com/lando/drupal/releases/tag/v0.10.0)
+* Updated to `@lando/pantheon` version [`0.11.0`](https://github.com/lando/pantheon/releases/tag/v0.11.0)
+* Updated to `@lando/redis` version [`0.9.0`](https://github.com/lando/redis/releases/tag/v0.9.0)
+
+
 ## v3.17.0 - [May 11, 2023](https://github.com/lando/lando/releases/tag/3.17.0)
 
 ### CLI
