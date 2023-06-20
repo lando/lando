@@ -122,35 +122,14 @@ begin
     end
     else begin
       Log('Windows feature VirtualMachinePlatform is not enabled');
-      SuppressibleMsgBox('Features not enabled!' + #13#10 + #13#10 + 'Lando requires that the VirtualMachinePlatform and Microsoft-Windows-Subsystem-Linux features be enabled.' + #13#10 + #13#10 + 'See https://learn.microsoft.com/en-us/windows/wsl/install for more info.', mbCriticalError, MB_OK, IDOK);
+      SuppressibleMsgBox('Features not enabled!' + #13#10 + #13#10 + 'Lando requires that the VirtualMachinePlatform feature be enabled.' + #13#10 + #13#10 + 'See https://learn.microsoft.com/en-us/windows/wsl/install for more info.', mbCriticalError, MB_OK, IDOK);
       Result := False;
       Exit;
     end;
   end
   else begin
     Log('Could not determine status of  Windows Feature: VirtualMachinePlatform' + IntToStr(ErrorCode));
-    SuppressibleMsgBox('Could not determine status of  Windows Feature: VirtualMachinePlatform!', mbCriticalError, MB_OK, IDOK);
-    Result := False;
-    Exit;
-  end;
-
-  if Exec(ExpandConstant('{cmd}'), '/C dism.exe /online /get-features /format:table /english | findstr "Microsoft-Windows-Subsystem-Linux" | findstr "Enabled"', '', SW_HIDE, ewWaitUntilTerminated, ErrorCode) then
-  begin
-    if ErrorCode = 0 then
-    begin
-      Log('Windows feature Microsoft-Windows-Subsystem-Linux is enabled');
-      Result := True;
-    end
-    else begin
-      Log('Windows feature Microsoft-Windows-Subsystem-Linux is not enabled');
-      SuppressibleMsgBox('Features not enabled!' + #13#10 + #13#10 + 'Lando requires that the VirtualMachinePlatform and Microsoft-Windows-Subsystem-Linux features be enabled.' + #13#10 + #13#10 + 'See https://learn.microsoft.com/en-us/windows/wsl/install for more info.', mbCriticalError, MB_OK, IDOK);
-      Result := False;
-      Exit;
-    end;
-  end
-  else begin
-    Log('Could not determine status of  Windows Feature: Microsoft-Windows-Subsystem-Linux' + IntToStr(ErrorCode));
-    SuppressibleMsgBox('Could not determine status of Windows Feature: Microsoft-Windows-Subsystem-Linux!', mbCriticalError, MB_OK, IDOK);
+    SuppressibleMsgBox('Could not determine status of Windows Feature: VirtualMachinePlatform!', mbCriticalError, MB_OK, IDOK);
     Result := False;
     Exit;
   end;

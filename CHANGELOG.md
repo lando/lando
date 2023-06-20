@@ -1,3 +1,11 @@
+## v3.18.1 - [June 20, 2023](https://github.com/lando/lando/releases/tag/3.18.1)
+
+### Installer
+
+#### Windows
+
+* Windows installer will only check for the `VirtualMachinePlatform` feature and will no longer check for `Microsoft-Windows-Subsystem-Linux` [#3490](https://github.com/lando/lando/issues/3490)
+
 ## v3.18.0 - [May 26, 2023](https://github.com/lando/lando/releases/tag/3.18.0)
 
 ### Plugins
