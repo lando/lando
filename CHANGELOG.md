@@ -7,7 +7,6 @@
 * Updated to `@lando/pantheon` version [`0.11.0`](https://github.com/lando/pantheon/releases/tag/v0.11.0)
 * Updated to `@lando/redis` version [`0.9.0`](https://github.com/lando/redis/releases/tag/v0.9.0)
 
-
 ## v3.17.0 - [May 11, 2023](https://github.com/lando/lando/releases/tag/3.17.0)
 
 ### CLI
