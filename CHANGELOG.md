@@ -1,10 +1,22 @@
-## v3.18.1 - [June 20, 2023](https://github.com/lando/lando/releases/tag/3.18.1)
+## v3.19.5 - [June 20, 2023](https://github.com/lando/lando/releases/tag/3.18.1)
+
+### CLI
+
+* Updated to `@lando/cli` version [`3.17.5`](https://github.com/lando/cli/releases/tag/v3.19.5)
+
+### DevOps
+
+* Switched release flow over to [@lando/prepare-release-action](https://github.com/lando/prepare-release-action)
 
 ### Installer
 
 #### Windows
 
 * Windows installer will only check for the `VirtualMachinePlatform` feature and will no longer check for `Microsoft-Windows-Subsystem-Linux` [#3490](https://github.com/lando/lando/issues/3490)
+
+### Plugins
+
+* Updated to `@lando/core` version [`3.17.2`](https://github.com/lando/core/releases/tag/v3.17.2)
 
 ## v3.18.0 - [May 26, 2023](https://github.com/lando/lando/releases/tag/3.18.0)
 
