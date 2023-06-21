@@ -76,8 +76,13 @@ jobs:
           done < BUILD.env
 
       # Build and prep the release
-      - name: Rewrite the version based on the tag
-        run: node scripts/dev-version.js
+      - name: Prepare Release
+        uses: lando/prepare-release-action@v2
+        with:
+          version: dev
+          sync: false
+      - name: Ensure version
+        run: node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)"
       - name: Assemble pieces
         run: scripts/assemble-linux.sh
       - name: Create package
