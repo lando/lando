@@ -76,6 +76,7 @@ jobs:
           sync: false
       - name: Ensure version
         run: node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)"
+        shell: bash
       - name: Import and verify certs
         run: scripts/import-macos-certs.sh
       - name: Assemble pieces
