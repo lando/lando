@@ -1,4 +1,4 @@
-## v3.19.5 - [June 20, 2023](https://github.com/lando/lando/releases/tag/3.18.1)
+## v3.19.5 - [June 20, 2023](https://github.com/lando/lando/releases/tag/3.19.5)
 
 ### CLI
 
