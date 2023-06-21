@@ -10,19 +10,5 @@
   "bugs": {
     "email": "mike@lando.dev",
     "url": "https://github.com/lando/lando/issues"
-  },
-  "scripts": {
-    "lint": "eslint  --quiet --ext .js --config .eslintrc.json scripts",
-    "release": "bump --prompt --tag --all --push"
-  },
-  "devDependencies": {
-    "eslint": "^6.1.0",
-    "eslint-config-google": "^0.9.1",
-    "version-bump-prompt": "^4.2.1"
-  },
-  "dependencies": {
-    "debug": "^4.3.2",
-    "fs-extra": "^10",
-    "lodash": "^4.17.21"
   }
 }
