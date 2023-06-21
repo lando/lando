@@ -79,6 +79,7 @@ jobs:
           sync: false
       - name: Ensure version
         run: node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)"
+        shell: bash
       - name: Assemble pieces
         run: scripts/assemble-linux.sh
       - name: Create package
@@ -210,6 +211,7 @@ jobs:
           sync: false
       - name: Ensure version
         run: node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)"
+        shell: bash
       - name: Import and verify certs
         run: scripts/import-macos-certs.sh
       - name: Assemble pieces
@@ -364,6 +366,7 @@ jobs:
           sync: false
       - name: Ensure version
         run: node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)"
+        shell: bash
       - name: Import and verify certs
         shell: powershell
         run: scripts/import-win-certs.ps1
@@ -466,3 +469,4 @@ jobs:
         uses: lando/prepare-release-action@v2
       - name: Ensure version
         run: node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)"
+        shell: bash
