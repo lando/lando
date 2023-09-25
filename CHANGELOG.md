@@ -1,6 +1,6 @@
 ## v3.20.0 - [September 25, 2023](https://github.com/lando/lando/releases/tag/3.20.0)
 
-**THIS RELEASE HAS SOME BIG CHANGES SO PLEASE [READ THIS](* [Extended release notes](https://lando.dev/blog/2023/09/25/v320-extended.html)**
+**THIS RELEASE HAS SOME BIG CHANGES SO PLEASE [READ THIS](https://lando.dev/blog/2023/09/25/v320-extended.html)**
 
 ### CLI
 
