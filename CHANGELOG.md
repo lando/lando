@@ -1,3 +1,25 @@
+## v3.20.0 - [September 25, 2023](https://github.com/lando/lando/releases/tag/3.20.0)
+
+**THIS RELEASE HAS SOME BIG CHANGES SO PLEASE [READ THIS](* [Extended release notes](https://lando.dev/blog/2023/09/25/v320-extended.html)**
+
+### CLI
+
+* Updated to `@lando/cli` version [`3.20.0`](https://github.com/lando/cli/releases/tag/v3.20.0)
+
+### Installer
+
+* Removed Docker Compose from Linux installer
+* Updated to [Docker Desktop 4.23.0 (120376)](https://docs.docker.com/desktop/release-notes/#4230)
+
+### Plugins
+
+* Updated to `@lando/core` version [`3.20.0`](https://github.com/lando/core/releases/tag/v3.20.0)
+* Updated to `@lando/lagoon` version [`0.10.0`](https://github.com/lando/lagoon/releases/tag/v0.10.0)
+
+## Special
+
+* [Extended release notes](https://lando.dev/blog/2023/09/25/v320-extended.html)
+
 ## v3.19.5 - [June 20, 2023](https://github.com/lando/lando/releases/tag/3.19.5)
 
 ### CLI
