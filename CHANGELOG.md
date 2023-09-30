@@ -1,3 +1,19 @@
+## v3.20.2 - [September 30, 2023](https://github.com/lando/lando/releases/tag/3.20.2)
+
+**THIS RELEASE HAS SOME BIG CHANGES SO PLEASE [READ THIS](https://lando.dev/blog/2023/09/25/v320-extended.html)**
+
+### CLI
+
+* Updated to `@lando/cli` version [`3.20.2`](https://github.com/lando/cli/releases/tag/v3.20.2)
+
+### Plugins
+
+* Updated to `@lando/core` version [`3.20.2`](https://github.com/lando/core/releases/tag/v3.20.2)
+
+## Special
+
+* [Extended release notes](https://lando.dev/blog/2023/09/25/v320-extended.html)
+
 ## v3.20.1 - [September 25, 2023](https://github.com/lando/lando/releases/tag/3.20.1)
 
 **THIS RELEASE HAS SOME BIG CHANGES SO PLEASE [READ THIS](https://lando.dev/blog/2023/09/25/v320-extended.html)**
@@ -13,7 +29,7 @@
 
 ### Plugins
 
-* Updated to `@lando/core` version [`3.20.0`](https://github.com/lando/core/releases/tag/v3.20.1)
+* Updated to `@lando/core` version [`3.20.1`](https://github.com/lando/core/releases/tag/v3.20.1)
 * Updated to `@lando/lagoon` version [`0.10.0`](https://github.com/lando/lagoon/releases/tag/v0.10.0)
 
 ## Special
