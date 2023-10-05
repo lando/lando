@@ -16,15 +16,6 @@ services:
         LANDO_API: https://api.lando.dev
       ports:
         - '8021:8021'
-
-
-  database:
-    type: "mysql:5.7-alpine"
-    type: "mysql-8.0:registry.hub.pirog.com/mysql:latest"
-
-  database:
-    image: registry.hub.pirog.com/mysql:latest
-
 tooling:
   node:
     service: cli
