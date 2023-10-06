@@ -63,7 +63,10 @@ jobs:
         run: node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)"
         shell: bash
       - name: Assemble pieces
-        run: scripts/assemble-linux.sh
+        run: |
+          pwd
+          ls -lsa
+          ./scripts/assemble-linux.sh
       - name: Create package
         run: |
           LANDO_VERSION=$(node -pe 'JSON.parse(process.argv[1]).version' "$(cat package.json)")
