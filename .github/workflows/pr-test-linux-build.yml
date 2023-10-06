@@ -65,7 +65,8 @@ jobs:
       - name: Assemble pieces
         run: |
           pwd
-          ls -lsa
+          ls -lsa scripts
+          cat scripts/assemble-linux.sh
           ./scripts/assemble-linux.sh
       - name: Create package
         run: |
