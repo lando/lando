@@ -14,6 +14,7 @@ jobs:
       WINDOZE_CERT_PASSWORD: ${{ secrets.WINDOZE_CERT_PASSWORD }}
       TERM: xterm
     strategy:
+      fail-fast: false
       matrix:
         os:
           - windows-2022

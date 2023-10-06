@@ -11,6 +11,7 @@ jobs:
     env:
       TERM: xterm
     strategy:
+      fail-fast: false
       matrix:
         node-version:
           - '16'
@@ -152,6 +153,7 @@ jobs:
       APPLE_TEAM_ID: FY8GAUX282
       TERM: xterm
     strategy:
+      fail-fast: false
       matrix:
         node-version:
           - '16'
@@ -306,6 +308,7 @@ jobs:
       WINDOZE_CERT_PASSWORD: ${{ secrets.WINDOZE_CERT_PASSWORD }}
       TERM: xterm
     strategy:
+      fail-fast: false
       matrix:
         node-version:
           - '16'

@@ -9,6 +9,7 @@ jobs:
     env:
       TERM: xterm
     strategy:
+      fail-fast: false
       matrix:
         os:
           - ubuntu-22.04

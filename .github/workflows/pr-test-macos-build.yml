@@ -12,6 +12,7 @@ jobs:
       APPLE_TEAM_ID: FY8GAUX282
       TERM: xterm
     strategy:
+      fail-fast: false
       matrix:
         os:
           - macos-12
