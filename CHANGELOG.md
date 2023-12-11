@@ -1,3 +1,10 @@
+## v3.20.7 - [December 11, 2023](https://github.com/lando/lando/releases/tag/3.20.7)
+
+### CLI
+
+* Updated to `@lando/cli` version [`3.20.7`](https://github.com/lando/cli/releases/tag/v3.20.7) to fix underlying `render-template` errors in nginx service (see `@lando/nginx` version [`1.0.0`](https://github.com/lando/nginx/releases/tag/v1.0.0)).
+
+
 ## v3.20.6 - [December 6, 2023](https://github.com/lando/lando/releases/tag/3.20.6)
 
   ### CLI
