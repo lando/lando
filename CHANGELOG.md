@@ -1,3 +1,7 @@
+## v3.20.8 - [December 12, 2023](https://github.com/lando/lando/releases/tag/3.20.8)
+
+* Rebuilt Lando to eliminate incorrectly cached CLI resource.
+
 ## v3.20.7 - [December 11, 2023](https://github.com/lando/lando/releases/tag/3.20.7)
 
 ### CLI
