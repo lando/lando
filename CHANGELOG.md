@@ -1,3 +1,22 @@
+## v3.21.0-alpha.10 - [January 15, 2024](https://github.com/lando/lando/releases/tag/3.21.0-alpha.9)
+
+**THIS RELEASE HAS SOME BIG CHANGES SO PLEASE [READ THIS](https://lando.dev/blog/2024/01/16/v321-extended.html)**
+
+We recommend ONLY using this release to help with testing.
+
+### CLI
+
+* Updated to `@lando/cli` version [`3.21.0-alpha.10`](https://github.com/lando/cli/releases/tag/v3.21.0-alpha.10)
+
+### Plugins
+
+* Updated to `@lando/core` version [`3.21.0-alpha.10`](https://github.com/lando/core/releases/tag/v3.21.0-alpha.10)
+
+## Special
+
+* [Extended release notes](https://lando.dev/blog/2024/01/16/v321-extended.html)
+
+
 ## v3.20.8 - [December 12, 2023](https://github.com/lando/lando/releases/tag/3.20.8)
 
 * Rebuilt Lando to eliminate incorrectly cached CLI resource.
