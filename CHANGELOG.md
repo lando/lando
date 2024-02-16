@@ -1,4 +1,21 @@
-## v3.21.0-alpha.10 - [January 15, 2024](https://github.com/lando/lando/releases/tag/3.21.0-alpha.9)
+## v3.21.0-beta.1 - [February 16, 2024](https://github.com/lando/lando/releases/tag/3.21.0-beta.1)
+
+**THIS RELEASE HAS SOME BIG CHANGES SO PLEASE [READ THIS](https://lando.dev/blog/2024/01/16/v321-extended.html)**
+
+### CLI
+
+* Updated to `@lando/cli` version [`3.21.0-beta.1`](https://github.com/lando/cli/releases/tag/v3.21.0-beta.1)
+
+### Plugins
+
+* Updated to `@lando/core` version [`3.21.0-beta.1`](https://github.com/lando/core/releases/tag/v3.21.0-beta.1)
+
+## Special
+
+* [Extended release notes](https://lando.dev/blog/2024/01/16/v321-extended.html)
+
+
+## v3.21.0-alpha.10 - [January 15, 2024](https://github.com/lando/lando/releases/tag/3.21.0-alpha.10)
 
 **THIS RELEASE HAS SOME BIG CHANGES SO PLEASE [READ THIS](https://lando.dev/blog/2024/01/16/v321-extended.html)**
 
