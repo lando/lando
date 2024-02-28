@@ -1,3 +1,25 @@
+## v3.21.0-beta.6 - [February 28, 2024](https://github.com/lando/lando/releases/tag/3.21.0-beta.6)
+
+**THIS RELEASE HAS SOME BIG CHANGES SO PLEASE [READ THIS](https://lando.dev/blog/2024/01/16/v321-extended.html)**
+
+### Installer
+
+* Removed `docker-ce` requirement from Linux packages
+* Removed Docker Desktop install from macOS installers
+* Updated Docker Desktop in Windows to version `4.27.2`
+
+### CLI
+
+* Updated to `@lando/cli` version [`3.21.0-beta.6`](https://github.com/lando/cli/releases/tag/v3.21.0-beta.6)
+
+### CORE
+
+* Updated to `@lando/core` version [`3.21.0-beta.6`](https://github.com/lando/core/releases/tag/v3.21.0-beta.6)
+
+## Special
+
+* [Extended release notes](https://lando.dev/blog/2024/01/16/v321-extended.html)
+
 ## v3.21.0-beta.1 - [February 16, 2024](https://github.com/lando/lando/releases/tag/3.21.0-beta.1)
 
 **THIS RELEASE HAS SOME BIG CHANGES SO PLEASE [READ THIS](https://lando.dev/blog/2024/01/16/v321-extended.html)**
@@ -13,7 +35,6 @@
 ## Special
 
 * [Extended release notes](https://lando.dev/blog/2024/01/16/v321-extended.html)
-
 
 ## v3.21.0-alpha.10 - [January 15, 2024](https://github.com/lando/lando/releases/tag/3.21.0-alpha.10)
 
