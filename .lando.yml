@@ -7,7 +7,7 @@ services:
   cli:
     type: node:14
     build:
-      - yarn install
+      - npm ci
     scanner: false
     ssl: true
     sslExpose: false
@@ -19,5 +19,5 @@ services:
 tooling:
   node:
     service: cli
-  yarn:
+  npm:
     service: cli
