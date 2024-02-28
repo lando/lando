@@ -31,3 +31,5 @@ _docs
 # Build dirs
 build
 dist
+
+yarn.lock

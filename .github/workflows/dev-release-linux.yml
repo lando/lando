@@ -57,14 +57,14 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: yarn
+          cache: npm
       - name: Install ruby ${{ matrix.ruby-version }}
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: true
-      - name: Install Yarn dependencies
-        run: yarn install --prefer-offline --frozen-lockfile
+      - name: Install dependencies
+        run: npm clean-install --prefer-offline --frozen-lockfile
 
       # Import ENVVARS from build.env
       # @NOTE: We do this so there is a single place to update versions
