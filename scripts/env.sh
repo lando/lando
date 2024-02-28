@@ -24,18 +24,6 @@ PKG_SCRIPTS="\
 # Set our dependencies
 DEPS=( iptables procps )
 
-# Add OS specific deps
-case "$1" in
-  rpm)
-    DEPS+=( docker-ce )
-    ;;
-  deb)
-    DEPS+=( docker-ce )
-    ;;
-  pacman)
-    DEPS+=( docker )
-esac
-
 # Loop through to build our PKG_DEPS
 for i in "${DEPS[@]}"
 do

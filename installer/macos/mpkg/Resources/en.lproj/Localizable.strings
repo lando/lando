@@ -4,9 +4,6 @@
 'choiceLando_title' = 'Lando CLI %LANDO_CLI_VERSION%';
 'choiceLando_msg' = 'Installs Lando into /usr/local/bin/';
 
-'choiceDocker_title' = 'Docker Desktop %DOCKER_VERSION%';
-'choiceDocker_msg' = 'Installs Docker Desktop into /Applications/';
-
 'UNSUPPORTED_HW_MACHINE_TLE' = "Unsupported hardware architecture detected!";
 'UNSUPPORTED_HW_MACHINE_MSG' = "The installer has detected an unsupported architecture.
 
@@ -20,19 +17,3 @@ If you have an Intel Mac please make sure you downloaded the x64 package. If you
 
 'UNSUPPORTED_OS_TLE' = "Unsupported OS version detected!";
 'UNSUPPORTED_OS_MSG' = "The installer has detected an unsupported macOS version. Please upgrade to macOS 11 or later.";
-
-'DOCKER_NOT_INSTALLED_TLE' = "Docker Desktop not detected!";
-'DOCKER_NOT_INSTALLED_MSG' = "The installer has detected that Docker Desktop is not installed but don't worry we can install it for you!
-
-If you don't want this choose \"Customize\" on the next step to change this behavior.";
-
-'DOCKER_BEHIND_TLE' = "Older Docker Desktop detected!";
-'DOCKER_BEHIND_MSG' = "The installer has detected an older version of Docker Desktop but don't worry we can update it for you!
-
-If you don't want this choose \"Customize\" on the next step to change this behavior.";
-
-'DOCKER_AHEAD_TLE' = "Newer Docker Desktop detected!";
-'DOCKER_AHEAD_MSG' = "The installer has detected that your version of Docker Desktop is ahead of what Lando expects!
-
-This is probably ok but is technically unsupported so YMMV.
-";

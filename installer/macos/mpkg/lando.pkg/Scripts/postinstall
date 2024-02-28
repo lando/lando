@@ -4,14 +4,9 @@
 unset DYLD_LIBRARY_PATH
 unset LD_LIBRARY_PATH
 
-# After installation we need to move our installed binary elsewhere
-#
-# This is needed until we can do proper signing of the lando binary pkg which
-# causes notarization to fail
-#
-# See: https://github.com/zeit/pkg/issues/128
-mkdir -p /usr/local/bin
-mv -f /usr/local/bin/lando /usr/local/bin/lando
-chmod +x /usr/local/bin/lando
+ln -sf "$HOME/.lando/bin/lando-%LANDO_VERSION%" "$HOME/.lando/bin/lando"
+chmod +x "$HOME/.lando/bin/lando"
+
+"$HOME/.lando/bin/lando" shellenv --add
 
 # Fin

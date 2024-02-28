@@ -8,23 +8,14 @@
     <welcome file="welcome.rtfd" mime-type="text/rtfd"/>
 
     <choices-outline>
-        <line choice="choiceDocker"/>
         <line choice="choiceLando"/>
     </choices-outline>
 
     <choice id="choiceLando" title="choiceLando_title" description="choiceLando_msg" start_selected="true" start_enabled="true" start_visible="true">
         <pkg-ref id="dev.lando.pkg.lando"/>
     </choice>
-    <pkg-ref id="dev.lando.pkg.lando" auth="Root" version="%LANDO_CLI_VERSION%" installKBytes="%LANDO_INSTALL_KBYTES%">#lando.pkg</pkg-ref>
+    <pkg-ref id="dev.lando.pkg.lando" version="%LANDO_CLI_VERSION%" installKBytes="%LANDO_INSTALL_KBYTES%">#lando.pkg</pkg-ref>
     <pkg-ref id="dev.lando.pkg.lando">
-        <bundle-version/>
-    </pkg-ref>
-
-    <choice id="choiceDocker" selected="installDocker()" title="choiceDocker_title" description="choiceDocker_msg" start_selected="true" start_enabled="true" start_visible="true">
-        <pkg-ref id="dev.lando.pkg.docker"/>
-    </choice>
-    <pkg-ref id="dev.lando.pkg.docker" auth="Root" version="%DOCKER_VERSION%" installKBytes="%DOCKER_INSTALL_KBYTES%">#docker.pkg</pkg-ref>
-    <pkg-ref id="dev.lando.pkg.docker">
         <bundle-version/>
     </pkg-ref>
 
@@ -34,22 +25,6 @@
     <script>
     <![CDATA[
     /* js:pkmk:start */
-    function installDocker()
-    {
-        try {
-            dockerplist = system.files.plistAtPath('/Applications/Docker.app/Contents/Info.plist');
-            if (!dockerplist) {
-                return true;
-            } else {
-                host_docker_desktop_version = dockerplist.CFBundleShortVersionString;
-                target_docker_desktop_version = '%DOCKER_VERSION%';
-                test = (system.compareVersions(host_docker_desktop_version, target_docker_desktop_version));
-                if (test == -1) return true;
-            }
-
-            return false;
-        } catch (e){ system.log(e); return false; }
-    }
 
     function checkPrerequisite()
     {
@@ -106,37 +81,6 @@
                 return false;
             }
         } catch (e) { system.log(e); return false; }
-
-        try {
-            dockerplist = system.files.plistAtPath('/Applications/Docker.app/Contents/Info.plist');
-            if (!dockerplist) {
-                system.log("Docker Desktop not detected");
-                my.result.type = 'Warning';
-                my.result.title = system.localizedString('DOCKER_NOT_INSTALLED_TLE');
-                my.result.message = system.localizedString('DOCKER_NOT_INSTALLED_MSG');
-                return false;
-            } else {
-                host_docker_desktop_version = dockerplist.CFBundleShortVersionString;
-                target_docker_desktop_version = '%DOCKER_VERSION%';
-                system.log("Docker Desktop detected, version: " + host_docker_desktop_version);
-                system.log("Lando wants to install Docker Desktop version: " + target_docker_desktop_version);
-                test = (system.compareVersions(host_docker_desktop_version, target_docker_desktop_version));
-                if (test == 1) {
-                    system.log("Host version of Docker Desktop is ahead of what Lando wants");
-                    my.result.type = 'Warning';
-                    my.result.title = system.localizedString('DOCKER_AHEAD_TLE');
-                    my.result.message = system.localizedString('DOCKER_AHEAD_MSG');
-                    return false;
-                }
-                if (test == -1) {
-                    system.log("Host version of Docker Desktop is behind of what Lando wants");
-                    my.result.type = 'Warning';
-                    my.result.title = system.localizedString('DOCKER_BEHIND_TLE');
-                    my.result.message = system.localizedString('DOCKER_BEHIND_MSG');
-                    return false;
-                }
-            }
-        } catch (e){ system.log(e); return false; }
     }
 
     /* js:pkmk:end */
