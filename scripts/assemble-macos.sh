@@ -47,6 +47,11 @@ while (( "$#" )); do
   esac
 done
 
+# ensure we have a URL
+if [ -z "$LANDO_URL" ]; then
+  LANDO_URL="https://files.lando.dev/cli/lando-macos-${ARCH}-v${LANDO_CLI_VERSION}"
+fi
+
 # Standardize ARCH
 if [ "$ARCH" == "x86_64" ]; then
   ARCH="x64"
@@ -73,7 +78,8 @@ curl -fsSL -o "$LANDO" "$LANDO_URL" && \
 # Build lando.pkg
 cd mpkg/lando.pkg && \
   chmod +x Scripts/* && \
-  cd Scripts && find . | cpio -o --format odc | gzip -c > ../Scripts.bin && cd .. && \
+  cd Scripts && sed -i "" -e "s/%LANDO_VERSION%/$LANDO_CLI_VERSION/g" ./* && cat postinstall && \
+  find . | cpio -o --format odc | gzip -c > ../Scripts.bin && cd .. && \
   rm -r Scripts && mv Scripts.bin Scripts && \
   mkdir ./rootfs && \
   cd ./rootfs && \
@@ -89,7 +95,7 @@ cd mpkg/lando.pkg && \
     ../PackageInfo ../../Distribution && \
   sed -i "" \
     -e "s/%LANDO_VERSION%/$LANDO_CLI_VERSION/g" \
-    ../PackageInfo ../Scripts/postinstall ../../Distribution  && \
+    ../PackageInfo ../../Distribution  && \
   cd .. && \
   rm -rf rootfs && \
   cd ../..
