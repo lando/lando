@@ -2,7 +2,7 @@
   "name": "@lando/lando",
   "description": "The best local development solution in the galaxy.",
   "license": "GPL-3.0",
-  "version": "3.21.0-beta.7",
+  "version": "3.21.0-beta.8",
   "repository": {
     "type": "git",
     "url": "https://github.com/lando/lando"
