@@ -16,7 +16,7 @@ jobs:
         os:
           - macos-12
         node-version:
-          - '16'
+          - '18'
         arch:
           - x64
           - arm64

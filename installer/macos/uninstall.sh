@@ -3,7 +3,6 @@
 set -e
 
 LANDO_UNINSTALLED=false
-DOCKER_UNINSTALLED=false
 
 # Uninstall Script
 # -# Get our options

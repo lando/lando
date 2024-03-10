@@ -452,7 +452,7 @@ jobs:
         os:
           - ubuntu-22.04
         node-version:
-          - '16'
+          - '18'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
