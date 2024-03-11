@@ -15,7 +15,7 @@ jobs:
         os:
           - windows-2022
         node-version:
-          - '16'
+          - '18'
         arch:
           - x64
     steps:

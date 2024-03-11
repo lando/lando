@@ -13,7 +13,7 @@ jobs:
         os:
           - ubuntu-22.04
         node-version:
-          - '16'
+          - '18'
         ruby-version:
           - '2.6'
         flavor:

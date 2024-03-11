@@ -13,7 +13,6 @@ $lando_pkg = Get-Content "package.json" | Out-String | ConvertFrom-Json
 $lando_version = $lando_pkg.version
 $issfile = "$base_dir\Lando.iss"
 
-$docker_version = $env:DOCKER_DESKTOP_VERSION
 $lando_cli_version = $env:LANDO_CLI_VERSION
 
 # Build dependencies
@@ -55,4 +54,4 @@ If (!(Test-Path $inno_bin)) {
 }
 
 $signer = "$signtool sign /f $cert_path /p $cert_password /fd sha256 /tr http://timestamp.digicert.com /td sha256 `$f"
-& iscc /DMyAppVersion=$lando_version /DDockerVersion=$docker_version /DLandoCLIVersion=$lando_cli_version /Ssigntool=$signer "$issfile"
+& iscc /DMyAppVersion=$lando_version /DLandoCLIVersion=$lando_cli_version /Ssigntool=$signer "$issfile"

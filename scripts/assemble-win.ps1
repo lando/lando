@@ -9,10 +9,8 @@ $ErrorActionPreference = "Stop"
 
 # Set defaults
 $lando_cli_version = $env:LANDO_CLI_VERSION
-$docker_build = $env:DOCKER_DESKTOP_BUILD
 
 # Download urls
-$docker_url="https://desktop.docker.com/win/main/amd64/$docker_build/Docker%20Desktop%20Installer.exe"
 $lando_url="https://files.lando.dev/cli/lando-win-x64-v$lando_cli_version.exe"
 
 # Installer things
@@ -34,7 +32,6 @@ function Download($url, $destination)
 }
 
 # Get some basic feedback on things
-Write-Output "Building with Docker from $docker_url"
 Write-Output "Building with Lando from $lando_url"
 
 # Prep our workspace
@@ -50,8 +47,6 @@ Write-Output "Grabbing the files we need..."
 # Lando CLI
 # NOTE: this should already be signed so we omit
 Download -Url "$lando_url" -Destination "$bin_dir\lando.exe"
-# Docker Desktop
-Download -Url "$docker_url" -Destination "$base_dir\Docker.exe"
 
 # Copy over some other assets
 Write-Output "Copying over static assets..."
