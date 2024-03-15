@@ -14,7 +14,6 @@
 
 * [Extended release notes](https://lando.dev/blog/2024/01/16/v321-extended.html)
 
-
 ## v3.21.0-beta.9 - [March 10, 2024](https://github.com/lando/lando/releases/tag/3.21.0-beta.9)
 
 **THIS RELEASE HAS SOME BIG CHANGES SO PLEASE [READ THIS](https://lando.dev/blog/2024/01/16/v321-extended.html)**
