@@ -26,6 +26,7 @@ jobs:
           - drupal:drupal
           - elasticsearch:elasticsearch
           - go:go
+          - install:setup-lando
           - joomla:joomla
           - lagoon:lagoon
           - lamp:lamp
@@ -48,6 +49,7 @@ jobs:
           - python:python
           - redis:redis
           - ruby:ruby
+          - setup-lando:setup-lando
           - solr:solr
           - symfony:symfony
           - tomcat:tomcat
