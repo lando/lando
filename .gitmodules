@@ -170,3 +170,7 @@
 	path = hyperdrive
 	url = git@github.com:lando/hyperdrive.git
 	branch = main
+[submodule "setup-lando"]
+	path = setup-lando
+	url = git@github.com:lando/setup-lando.git
+	branch = main
