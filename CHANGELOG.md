@@ -2,9 +2,17 @@
 
 **THIS RELEASE HAS SOME BIG CHANGES SO PLEASE [READ THIS](https://lando.dev/blog/2024/01/16/v321-extended.html)**
 
+### Notes
+
+This is an in-between release that starts to move installation over to [@lando/setup-lando](https://github.com/lando/setup-lando)
+
+If you are on Windows you can use the package installer attached to this release.
+
+If you are on macOS or Linux we recommend you visit [the install docs](https://docs.lando.dev/install).
+
 ### Installer
 
-* Removed `macOS` and `Linux` package installers in favor of new [installation scripts](https://docs.lando.dev/install/macos.html)
+* Removed `macOS` and `Linux` package installers in favor of new [installation scripts](https://docs.lando.dev/install)
 
 ### CLI
 
