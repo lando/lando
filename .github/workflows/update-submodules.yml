@@ -22,7 +22,7 @@ jobs:
       - name: Setup git user
         shell: bash
         run: |
-          git config --local user.email ""
+          git config --local user.email "rtfm47@lando.dev"
           git config --local user.name "rtfm-47"
       - name: Update submodules
         shell: bash
