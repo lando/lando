@@ -68,7 +68,7 @@ jobs:
 
       # Build and prep the release
       - name: Prepare Release
-        uses: lando/prepare-release-action@v2
+        uses: lando/prepare-release-action@v3
         with:
           sync: false
       - name: Ensure version
