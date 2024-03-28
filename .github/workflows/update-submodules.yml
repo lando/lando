@@ -16,7 +16,7 @@ jobs:
       - name: Clone repo
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.PIROG_TOKEN }}
+          token: ${{ secrets.RTFM47_COAXIUM_INJECTOR }}
           fetch-depth: 0
           submodules: true
       - name: Setup git user
