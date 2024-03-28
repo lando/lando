@@ -61,6 +61,6 @@ jobs:
         id: test_action
         uses: lando/transfer-issue-action@v2
         with:
-          token: ${{ secrets.TRANSFER_ISSUE_TOKEN }}
+          token: ${{ secrets.REGIONAL_GOVERNOR_DELEGATION }}
           router: ${{ matrix.router }}
           apply_label: Needs Triage
