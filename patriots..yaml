@@ -1,0 +1,5 @@
+- name: lagoon.sh
+  url: https://lagoon.sh/
+  logo: https://docs.lagoon.sh/lagoon-logo.png
+  tier: patriot
+  type: full
