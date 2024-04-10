@@ -1,3 +1,31 @@
+## v3.21.0-beta.14 - [April 10, 2024](https://github.com/lando/lando/releases/tag/3.21.0-beta.14)
+
+**THIS RELEASE HAS SOME BIG CHANGES SO PLEASE [READ THIS](https://lando.dev/blog/2024/01/16/v321-extended.html)**
+
+### Notes
+
+This is an in-between release that starts to move installation over to [@lando/setup-lando](https://github.com/lando/setup-lando)
+
+If you are on Windows you can use the package installer attached to this release.
+
+If you are on macOS or Linux we recommend you visit [the install docs](https://docs.lando.dev/install).
+
+### Installer
+
+* Removed `macOS` and `Linux` package installers in favor of new [installation scripts](https://docs.lando.dev/install)
+
+### CLI
+
+* Updated to `@lando/cli` version [`3.21.0-beta.14`](https://github.com/lando/cli/releases/tag/v3.21.0-beta.14)
+
+### CORE
+
+* Updated to `@lando/core` version [`3.21.0-beta.14`](https://github.com/lando/core/releases/tag/v3.21.0-beta.14)
+
+## Special
+
+* [Extended release notes](https://lando.dev/blog/2024/01/16/v321-extended.html)
+
 ## v3.21.0-beta.13 - [April 6, 2024](https://github.com/lando/lando/releases/tag/3.21.0-beta.13)
 
 **THIS RELEASE HAS SOME BIG CHANGES SO PLEASE [READ THIS](https://lando.dev/blog/2024/01/16/v321-extended.html)**
