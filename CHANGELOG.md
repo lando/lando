@@ -1,3 +1,38 @@
+## v3.21.0-beta.15 - [TBD](https://github.com/lando/lando/releases/tag/3.21.0-beta.15)
+
+**THIS RELEASE HAS SOME BIG CHANGES SO PLEASE [READ THIS](https://lando.dev/blog/2024/01/16/v321-extended.html)**
+
+### Notes
+
+This completes moving Lando install over to [@lando/setup-lando](https://github.com/lando/setup-lando).
+
+The `tl;dr` on installation is now to run the below as appropriate:
+
+**macOS/Linux**
+```sh
+/bin/bash -c "$(curl -fsSL https://get.lando.dev/setup-lando.sh)"
+```
+
+**Windows/WSL**
+
+```powershell
+iex (irm 'https://get.lando.dev/setup-lando.ps1' -UseB)
+```
+
+For more info or advanced usage check out the [the install docs](https://docs.lando.dev/install).
+
+### DEPRECATION
+
+* v3.21.0 will be the last release posted here
+
+### Installer
+
+* Removed `Windows` package installers in favor of new [installation scripts](https://docs.lando.dev/install)
+
+## Special
+
+* [Extended release notes](https://lando.dev/blog/2024/01/16/v321-extended.html)
+
 ## v3.21.0-beta.14 - [April 10, 2024](https://github.com/lando/lando/releases/tag/3.21.0-beta.14)
 
 **THIS RELEASE HAS SOME BIG CHANGES SO PLEASE [READ THIS](https://lando.dev/blog/2024/01/16/v321-extended.html)**
