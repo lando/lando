@@ -26,7 +26,7 @@ Lando is and always will be FREE and OPEN SOURCE. As such it relies on generous 
 
 ### Getting Started
 
-[Introduction](https://docs.lando.dev/getting-started) | 
+[Introduction](https://docs.lando.dev/getting-started/) | 
 [CLI Usage](https://docs.lando.dev/cli/) | 
 [Installation](https://docs.lando.dev/getting-started/installation)
 
