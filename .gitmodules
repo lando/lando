@@ -1,98 +1,86 @@
-[submodule "docs"]
-	path = docs
-	url = git@github.com:lando/docs.git
-	branch = main
-[submodule "cli"]
-	path = cli
-	url = git@github.com:lando/cli.git
-	branch = main
-[submodule "plugins/platformsh"]
-	path = plugins/platformsh
-	url = git@github.com:lando/platformsh.git
-	branch = main
-[submodule "plugins/acquia"]
-	path = plugins/acquia
-	url = git@github.com:lando/acquia.git
-	branch = main
-[submodule "plugins/lagoon"]
-	path = plugins/lagoon
-	url = git@github.com:lando/lagoon.git
-	branch = main
-[submodule "plugins/pantheon"]
-	path = plugins/pantheon
-	url = git@github.com:lando/pantheon.git
-	branch = main
 [submodule "blog"]
 	path = blog
 	url = git@github.com:lando/blog.git
+	branch = main
+[submodule "core"]
+	path = core
+	url = git@github.com:lando/core.git
+	branch = main
+[submodule "core-next"]
+	path = core-next
+	url = git@github.com:lando/core-next.git
 	branch = main
 [submodule "events"]
 	path = events
 	url = git@github.com:lando/events.git
 	branch = main
-[submodule "website"]
-	path = website
-	url = git@github.com:lando/website.git
+[submodule "hyperdrive"]
+	path = hyperdrive
+	url = git@github.com:lando/hyperdrive.git
+	branch = main
+[submodule "plugins/acquia"]
+	path = plugins/acquia
+	url = git@github.com:lando/acquia.git
 	branch = main
 [submodule "plugins/apache"]
 	path = plugins/apache
 	url = git@github.com:lando/apache.git
 	branch = main
-[submodule "plugins/mariadb"]
-	path = plugins/mariadb
-	url = git@github.com:lando/mariadb.git
-	branch = main
-[submodule "plugins/mysql"]
-	path = plugins/mysql
-	url = git@github.com:lando/mysql.git
-	branch = main
-[submodule "plugins/nginx"]
-	path = plugins/nginx
-	url = git@github.com:lando/nginx.git
-	branch = main
-[submodule "plugins/php"]
-	path = plugins/php
-	url = git@github.com:lando/php.git
-	branch = main
-[submodule "plugins/postgres"]
-	path = plugins/postgres
-	url = git@github.com:lando/postgres.git
-	branch = main
-[submodule "plugins/lamp"]
-	path = plugins/lamp
-	url = git@github.com:lando/lamp.git
-	branch = main
-[submodule "plugins/lemp"]
-	path = plugins/lemp
-	url = git@github.com:lando/lemp.git
-	branch = main
-[submodule "plugins/solr"]
-	path = plugins/solr
-	url = git@github.com:lando/solr.git
-	branch = main
-[submodule "plugins/elasticsearch"]
-	path = plugins/elasticsearch
-	url = git@github.com:lando/elasticsearch.git
-	branch = main
-[submodule "plugins/python"]
-	path = plugins/python
-	url = git@github.com:lando/python.git
-	branch = main
-[submodule "plugins/dotnet"]
-	path = plugins/dotnet
-	url = git@github.com:lando/dotnet.git
-	branch = main
-[submodule "plugins/go"]
-	path = plugins/go
-	url = git@github.com:lando/go.git
+[submodule "plugins/backdrop"]
+	path = plugins/backdrop
+	url = git@github.com:lando/backdrop.git
 	branch = main
 [submodule "plugins/compose"]
 	path = plugins/compose
 	url = git@github.com:lando/compose.git
 	branch = main
+[submodule "plugins/dotnet"]
+	path = plugins/dotnet
+	url = git@github.com:lando/dotnet.git
+	branch = main
+[submodule "plugins/drupal"]
+	path = plugins/drupal
+	url = git@github.com:lando/drupal.git
+	branch = main
+[submodule "plugins/elasticsearch"]
+	path = plugins/elasticsearch
+	url = git@github.com:lando/elasticsearch.git
+	branch = main
+[submodule "plugins/go"]
+	path = plugins/go
+	url = git@github.com:lando/go.git
+	branch = main
+[submodule "plugins/joomla"]
+	path = plugins/joomla
+	url = git@github.com:lando/joomla.git
+	branch = main
+[submodule "plugins/lagoon"]
+	path = plugins/lagoon
+	url = git@github.com:lando/lagoon.git
+	branch = main
+[submodule "plugins/lamp"]
+	path = plugins/lamp
+	url = git@github.com:lando/lamp.git
+	branch = main
+[submodule "plugins/laravel"]
+	path = plugins/laravel
+	url = git@github.com:lando/laravel.git
+	branch = main
+[submodule "plugins/lemp"]
+	path = plugins/lemp
+	url = git@github.com:lando/lemp.git
+	branch = main
 [submodule "plugins/mailhog"]
 	path = plugins/mailhog
 	url = git@github.com:lando/mailhog.git
+	branch = main
+[submodule "plugins/mariadb"]
+	path = plugins/mariadb
+	url = git@github.com:lando/mariadb.git
+	branch = main
+[submodule "plugins/mean"]
+	path = plugins/mean
+	url = git@github.com:lando/mean.git
 	branch = main
 [submodule "plugins/memcached"]
 	path = plugins/memcached
@@ -106,13 +94,41 @@
 	path = plugins/mssql
 	url = git@github.com:lando/mssql.git
 	branch = main
+[submodule "plugins/mysql"]
+	path = plugins/mysql
+	url = git@github.com:lando/mysql.git
+	branch = main
+[submodule "plugins/nginx"]
+	path = plugins/nginx
+	url = git@github.com:lando/nginx.git
+	branch = main
 [submodule "plugins/node"]
 	path = plugins/node
 	url = git@github.com:lando/node.git
 	branch = main
+[submodule "plugins/pantheon"]
+	path = plugins/pantheon
+	url = git@github.com:lando/pantheon.git
+	branch = main
+[submodule "plugins/php"]
+	path = plugins/php
+	url = git@github.com:lando/php.git
+	branch = main
 [submodule "plugins/phpmyadmin"]
 	path = plugins/phpmyadmin
 	url = git@github.com:lando/phpmyadmin.git
+	branch = main
+[submodule "plugins/platformsh"]
+	path = plugins/platformsh
+	url = git@github.com:lando/platformsh.git
+	branch = main
+[submodule "plugins/postgres"]
+	path = plugins/postgres
+	url = git@github.com:lando/postgres.git
+	branch = main
+[submodule "plugins/python"]
+	path = plugins/python
+	url = git@github.com:lando/python.git
 	branch = main
 [submodule "plugins/redis"]
 	path = plugins/redis
@@ -122,6 +138,14 @@
 	path = plugins/ruby
 	url = git@github.com:lando/ruby.git
 	branch = main
+[submodule "plugins/solr"]
+	path = plugins/solr
+	url = git@github.com:lando/solr.git
+	branch = main
+[submodule "plugins/symfony"]
+	path = plugins/symfony
+	url = git@github.com:lando/symfony.git
+	branch = main
 [submodule "plugins/tomcat"]
 	path = plugins/tomcat
 	url = git@github.com:lando/tomcat.git
@@ -130,47 +154,15 @@
 	path = plugins/varnish
 	url = git@github.com:lando/varnish.git
 	branch = main
-[submodule "plugins/backdrop"]
-	path = plugins/backdrop
-	url = git@github.com:lando/backdrop.git
-	branch = main
-[submodule "plugins/joomla"]
-	path = plugins/joomla
-	url = git@github.com:lando/joomla.git
-	branch = main
-[submodule "plugins/laravel"]
-	path = plugins/laravel
-	url = git@github.com:lando/laravel.git
-	branch = main
-[submodule "plugins/mean"]
-	path = plugins/mean
-	url = git@github.com:lando/mean.git
-	branch = main
-[submodule "plugins/symfony"]
-	path = plugins/symfony
-	url = git@github.com:lando/symfony.git
-	branch = main
 [submodule "plugins/wordpress"]
 	path = plugins/wordpress
 	url = git@github.com:lando/wordpress.git
 	branch = main
-[submodule "plugins/drupal"]
-	path = plugins/drupal
-	url = git@github.com:lando/drupal.git
-	branch = main
-[submodule "core"]
-	path = core
-	url = git@github.com:lando/core.git
-	branch = main
-[submodule "core-next"]
-	path = core-next
-	url = git@github.com:lando/core-next.git
-	branch = main
-[submodule "hyperdrive"]
-	path = hyperdrive
-	url = git@github.com:lando/hyperdrive.git
-	branch = main
 [submodule "setup-lando"]
 	path = setup-lando
 	url = git@github.com:lando/setup-lando.git
+	branch = main
+[submodule "website"]
+	path = website
+	url = git@github.com:lando/website.git
 	branch = main
