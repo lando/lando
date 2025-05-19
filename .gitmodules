@@ -74,6 +74,10 @@
 	path = plugins/mailhog
 	url = git@github.com:lando/mailhog.git
 	branch = main
+[submodule "plugins/mailpit"]
+        path = plugins/mailpit
+        url = git@github.com:lando/mailpit.git
+        branch = main
 [submodule "plugins/mariadb"]
 	path = plugins/mariadb
 	url = git@github.com:lando/mariadb.git
