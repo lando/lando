@@ -33,6 +33,7 @@ jobs:
           - laravel:laravel
           - lemp:lemp
           - mailhog:mailhog
+          - mailpit:mailpit
           - mariadb:mariadb
           - mean:mean
           - memcached:memcached
