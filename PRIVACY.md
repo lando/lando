@@ -2,7 +2,7 @@
 
 Effective date: July 4, 2025
 
-Lando Alliance ("Lando Alliance", "us", "we", or "our") operates the Lando software, plugins, ecosystem and related projects (hereinafter referred to as the "Software").
+Lando Alliance ("Lando Alliance", "us", "we", or "our") operates the Lando software, its plugins, ecosystem and related projects within this GitHub organization and (hereinafter referred to as the "Software").
 
 This page informs you of our policies regarding the collection, use and disclosure of personal data when you use our Software and the choices you have associated with that data.
 
