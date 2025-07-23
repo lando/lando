@@ -110,10 +110,8 @@ If you have discovered a security issue with Lando, please contact the Lando Sec
 
 ## Acknowledgements
 
-All Lando related sites are powered and:
-
+All Lando related sites are powered and built with:
 <br>
-
 <a href="https://www.netlify.com">
   <img src="https://www.netlify.com/img/global/badges/netlify-color-bg.svg"/>
 </a>
