@@ -106,14 +106,14 @@ If you have discovered a security issue with Lando, please contact the Lando Sec
 
 ## Other Resources
 
-* [LICENSE](/LICENSE)
-* [TERMS OF USE](https://docs.lando.dev/terms)
-* [PRIVACY POLICY](https://docs.lando.dev/privacy)
-* [CODE OF CONDUCT](/)
+[LICENSE](/LICENSE) | [TERMS OF USE](https://docs.lando.dev/terms) | [PRIVACY POLICY](https://docs.lando.dev/privacy) | [CODE OF CONDUCT](/CODE_OF_CONDUCT.md)
 
 ## Acknowledgements
 
 All Lando related sites are powered and:
+
+<br>
+
 <a href="https://www.netlify.com">
   <img src="https://www.netlify.com/img/global/badges/netlify-color-bg.svg"/>
 </a>
