@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         os:
-          - ubuntu-20.04
+          - ubuntu-24.04
         router:
           - acquia:acquia
           - apache:apache
@@ -24,6 +24,7 @@ jobs:
           - documentation:docs
           - dotnet:dotnet
           - drupal:drupal
+          - devtool:devtool
           - elasticsearch:elasticsearch
           - go:go
           - install:setup-lando
