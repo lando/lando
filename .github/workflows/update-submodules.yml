@@ -14,7 +14,7 @@ jobs:
           - ubuntu-22.04
     steps:
       - name: Clone repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
         with:
           token: ${{ secrets.RTFM47_COAXIUM_INJECTOR }}
           fetch-depth: 0
